@@ -33,7 +33,7 @@ class UserService
 
         return [
             'data'    => $authUser,
-            'message' => ''
+            'message' => __('notifications.email confirmation link')
         ];
     }
 
