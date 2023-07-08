@@ -20,7 +20,7 @@ Route::post('login', [AuthUserController::class, 'login']);
 Route::post('create', [UserController::class, 'store']);
 
 Route::middleware([
-    'auth:users',
+    'auth:user',
 ])
     ->prefix('user')
     ->group(function () {

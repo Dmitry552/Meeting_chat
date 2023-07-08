@@ -25,14 +25,14 @@ class AuthService
         if ($data instanceof User) {
             $token = JWTAuth::fromUser($data);
 
-            return $this->respondWithToken($token);
+            return response()->json($this->respondWithToken($token));
         }
 
         if (! $token = auth($this->guard)->attempt($data)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return response()->json($this->respondWithToken($token));
     }
 
     public function me():  JsonResponse

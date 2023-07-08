@@ -38,7 +38,7 @@ return [
     'guards' => [
         'admin' => [
             'driver' => 'jwt',
-            'provider' => 'SystemUsers',
+            'provider' => 'admin',
         ],
         'user' => [
             'driver' => 'jwt',
@@ -90,7 +90,7 @@ return [
     */
 
     'passwords' => [
-        'users' => [
+        'user' => [
             'provider' => 'users',
             'table' => 'user_password_resets',
             'expire' => 60,

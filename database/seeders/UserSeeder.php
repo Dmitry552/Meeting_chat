@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'name' => 'TestUser',
             'email' => '12345@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2a$12$STAEX0v/6qnvXzTi4obBG.pW6nu9QfFTrUDcGGPZHHzzJ916KIbQO', // 12345678
+            'password' => '12345678',
             'remember_token' => Str::random(10),
         ]);
     }
