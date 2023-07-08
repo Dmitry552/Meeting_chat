@@ -6,17 +6,10 @@ use Tests\Feature\User\Traits\UserAuthorizedTrait;
 
 class AuthUserTest extends BaseUserTest
 {
-    use UserAuthorizedTrait;
-
-    private function getUrlLogin(): string
-    {
-        return parent::ROUTE_USER_LOGIN;
-    }
-
     public function test_error_for_missing_email_address()
     {
         $response = $this->postJson(
-            self::ROUTE_USER_LOGIN,
+            self::ROUTE_AUTH_LOGIN,
             [
                 'password' => '12345678'
             ]
@@ -32,7 +25,7 @@ class AuthUserTest extends BaseUserTest
     public function test_error_to_wrong_email()
     {
         $response = $this->postJson(
-            parent::ROUTE_USER_LOGIN,
+            parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345gmail.com',
                 'password' => '12345678'
@@ -47,7 +40,7 @@ class AuthUserTest extends BaseUserTest
     public function test_error_for_missing_password_address()
     {
         $response = $this->postJson(
-            self::ROUTE_USER_LOGIN,
+            self::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345g@mail.com'
             ]
@@ -61,7 +54,7 @@ class AuthUserTest extends BaseUserTest
     public function test_error_to_wrong_password()
     {
         $response = $this->postJson(
-            parent::ROUTE_USER_LOGIN,
+            parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345@gmail.com',
                 'password' => 'fgkljbnfgknb'
@@ -76,7 +69,7 @@ class AuthUserTest extends BaseUserTest
     public function test_user_unauthorized()
     {
         $response = $this->postJson(
-            parent::ROUTE_USER_LOGIN,
+            parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '123fv45@gmail.com',
                 'password' => '234ergeerg'
@@ -91,7 +84,7 @@ class AuthUserTest extends BaseUserTest
     {
 
         $response = $this->postJson(
-            parent::ROUTE_USER_LOGIN,
+            parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345@gmail.com',
                 'password' => '12345678'
@@ -104,32 +97,43 @@ class AuthUserTest extends BaseUserTest
 
     public function test_user_logout()
     {
-        $token = $this->authorizedUser('12345@gmail.com', '12345678');
+        $response = $this->userAuthorizationWithHeaderAdded()
+            ->postJson(self::ROUTE_AUTH_LOGOUT);
 
-        $response = $this->withHeader(
-            'Authorization',
-            'bearer ' . $token
-        )
-            ->postJson(self::ROUTE_USER_LOGOUT);
-
-        $response->assertStatus(200)
+        $response->assertOk()
             ->assertJsonFragment(self::getLogoutFragment());
     }
 
     public function test_user_refresh()
     {
-        $token = $this->authorizedUser('12345@gmail.com', '12345678');
+        $responseData = $this->authorizedUser();
+
+        $token = $responseData['access_token'];
 
         $response = $this->withHeader(
-            'Authorization',
-            'bearer ' . $token
-        )
-            ->postJson(self::ROUTE_USER_REFRESH);
+            $responseData['token_type'],
+            'bearer ' . $responseData['access_token']
+        )->postJson(self::ROUTE_AUTH_REFRESH);
 
-        $response->assertStatus(200);
+        $response->assertOk();
 
-        $newToken = $response->decodeResponseJson()['access_token'];
+        $netToken = $response->decodeResponseJson()['access_token'];
 
-        $this->assertNotEquals($token, $newToken);
+        $this->assertNotEquals($token, $netToken);
+    }
+
+    public function test_user_me()
+    {
+        $responseData = $this->authorizedUser();
+
+        $token = $responseData['access_token'];
+
+        $response = $this->withHeader(
+            $responseData['token_type'],
+            'bearer ' . $responseData['access_token']
+        )->getJson(self::ROUTE_AUTH_SHOW_ME);
+
+        $response->assertOk()
+            ->assertJsonStructure(self::getUserStructure());
     }
 }

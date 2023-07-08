@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Requests\User\UserCreateRequest;
+use App\Http\Requests\User\UserGetRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Services\UserService;
 use App\Models\User;
-use \Illuminate\Http\JsonResponse;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends BaseUserController
 {
@@ -17,9 +18,9 @@ class UserController extends BaseUserController
         $this->service = $service;
     }
 
-    public function index(): JsonResponse
+    public function index(UserGetRequest $request): JsonResponse
     {
-        return response()->json($this->service->index());
+        return response()->json($this->service->getUsers($request->all()));
     }
 
     public function store(UserCreateRequest $request): JsonResponse

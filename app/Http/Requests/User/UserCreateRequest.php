@@ -20,6 +20,7 @@ class UserCreateRequest extends FormRequest
             ],
             'password' => [
                 'required',
+                'confirmed',
                 Password::min(3)
                     ->numbers()
             ]

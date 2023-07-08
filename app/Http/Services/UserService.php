@@ -2,31 +2,37 @@
 
 namespace App\Http\Services;
 
+use App\Http\Repositories\User\UserRepository;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Exceptions\UserUpdateException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UserService
 {
     private AuthService $authService;
+    private UserRepository $userRepository;
 
-    public function __construct(AuthService $authService)
+    public function __construct(AuthService $authService, UserRepository $userRepository)
     {
         $this->authService = $authService;
+        $this->userRepository = $userRepository;
     }
 
-    public function index(): array
+    public function getUsers(array $data): array
     {
-        $users = $this->userRepository->index();
+        $users = $this->userRepository->index($data);
 
         return [
             'data' => UserResource::collection($users),
+            'links' => $this->getTransformedLinkData($users),
             'meta' => $this->getTransformedMetaData($users)
         ];
     }
 
     public function create(array $data): array
     {
+        /** @var User $user */
         $user = $this->userRepository->create($data);
 
         $authUser = $this->authService->login($user, 'user');
@@ -61,5 +67,27 @@ class UserService
         return new UserResource($user);
     }
 
+    private function getTransformedLinkData(LengthAwarePaginator $data): array
+    {
+        return [
+            'path'         => $data->getOptions()['path'],
+            'firstPageUrl' => $data->url(1),
+            'lastPageUrl'  => $data->url($data->lastPage()),
+            'nextPageUrl'  => $data->nextPageUrl(),
+            'prevPageUrl'  => $data->previousPageUrl()
+        ];
+    }
 
+    private function getTransformedMetaData(LengthAwarePaginator $data): array
+    {
+        return [
+            'currentPage'  => $data->currentPage(),
+            'from'         => $data->firstItem(),
+            'lastPage'     => $data->lastPage(),
+            'perPage'      => $data->perPage(),
+            'to'           => $data->lastItem(),
+            'total'        => $data->total(),
+            'count'        => $data->count(),
+        ];
+    }
 }

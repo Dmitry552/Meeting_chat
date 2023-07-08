@@ -9,14 +9,12 @@ abstract class BaseRepository
 {
     protected Model $model;
 
-    public int $limit = 10;
-
     /**
      * @return LengthAwarePaginator
      */
-    public function index(): LengthAwarePaginator
+    public function index($data): LengthAwarePaginator
     {
-        return $this->model::paginate($this->limit);
+        return $this->model::paginate($data['limit']);
     }
 
     /**
