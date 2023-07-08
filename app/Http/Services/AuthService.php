@@ -25,7 +25,7 @@ class AuthService
         if ($data instanceof User) {
             $token = JWTAuth::fromUser($data);
 
-            return response()->json($this->respondWithToken($token));
+            return $this->respondWithToken($token);
         }
 
         if (! $token = auth($this->guard)->attempt($data)) {
