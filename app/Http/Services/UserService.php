@@ -70,21 +70,21 @@ class UserService
     {
         return [
             'links' => [
-                'path' => $data->toArray()['path'],
-                'firstPageUrl' => $data->toArray()['first_page_url'],
-                'lastPageUrl' => $data->url($data->lastPage()),
-                'nextPageUrl' => $data->nextPageUrl(),
-                'prevPageUrl' => $data->previousPageUrl(),
+                'path'         => $data->getOptions()['path'],
+                'firstPageUrl' => $data->url(1),
+                'lastPageUrl'  => $data->url($data->lastPage()),
+                'nextPageUrl'  => $data->nextPageUrl(),
+                'prevPageUrl'  => $data->previousPageUrl()
             ],
             'meta' => [
-                'currentPage' => $data->currentPage(),
-                'from' => $data->firstItem(),
-                'lastPage' => $data->lastPage(),
-                'perPage' => $data->perPage(),
-                'to' => $data->lastItem(),
-                'total' => $data->total(),
-                'count' => $data->count(),
-            ],
+                'currentPage'  => $data->currentPage(),
+                'from'         => $data->firstItem(),
+                'lastPage'     => $data->lastPage(),
+                'perPage'      => $data->perPage(),
+                'to'           => $data->lastItem(),
+                'total'        => $data->total(),
+                'count'        => $data->count(),
+            ]
         ];
     }
 }
