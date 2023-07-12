@@ -25,6 +25,7 @@ class UserService
 
         return [
             'data' => UserResource::collection($users),
+            'links' => $this->getTransformedLinkData($users),
             'meta' => $this->getTransformedMetaData($users)
         ];
     }
@@ -66,25 +67,27 @@ class UserService
         return new UserResource($user);
     }
 
+    private function getTransformedLinkData(LengthAwarePaginator $data): array
+    {
+        return [
+            'path'         => $data->getOptions()['path'],
+            'firstPageUrl' => $data->url(1),
+            'lastPageUrl'  => $data->url($data->lastPage()),
+            'nextPageUrl'  => $data->nextPageUrl(),
+            'prevPageUrl'  => $data->previousPageUrl()
+        ];
+    }
+
     private function getTransformedMetaData(LengthAwarePaginator $data): array
     {
         return [
-            'links' => [
-                'path'         => $data->getOptions()['path'],
-                'firstPageUrl' => $data->url(1),
-                'lastPageUrl'  => $data->url($data->lastPage()),
-                'nextPageUrl'  => $data->nextPageUrl(),
-                'prevPageUrl'  => $data->previousPageUrl()
-            ],
-            'meta' => [
-                'currentPage'  => $data->currentPage(),
-                'from'         => $data->firstItem(),
-                'lastPage'     => $data->lastPage(),
-                'perPage'      => $data->perPage(),
-                'to'           => $data->lastItem(),
-                'total'        => $data->total(),
-                'count'        => $data->count(),
-            ]
+            'currentPage'  => $data->currentPage(),
+            'from'         => $data->firstItem(),
+            'lastPage'     => $data->lastPage(),
+            'perPage'      => $data->perPage(),
+            'to'           => $data->lastItem(),
+            'total'        => $data->total(),
+            'count'        => $data->count(),
         ];
     }
 }

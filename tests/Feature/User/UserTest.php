@@ -9,13 +9,6 @@ use Tests\Feature\User\Traits\UserAuthorizedTrait;
 
 class UserTest extends BaseUserTest
 {
-    use UserAuthorizedTrait;
-
-    private function getUrlLogin(): string
-    {
-        return parent::ROUTE_AUTH_LOGIN;
-    }
-
     /**
      * A basic feature test example.
      *

@@ -3,17 +3,25 @@
 namespace Tests\Feature\User;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\User\Traits\UserAuthorizedTrait;
 use Tests\TestCase;
 
 abstract class BaseUserTest extends TestCase
 {
+    use UserAuthorizedTrait;
+
+    private function getUrlLogin(): string
+    {
+        return self::ROUTE_AUTH_LOGIN;
+    }
+
     /**
      * Auth user
      */
     protected const ROUTE_AUTH_LOGIN = 'api/login';
     protected const ROUTE_AUTH_LOGOUT = 'api/user/logout';
     protected const ROUTE_AUTH_REFRESH = 'api/user/refresh';
-    protected const ROUTE_AUTH_SHOW_ME = 'api/user/me'; //TODO: added test
+    protected const ROUTE_AUTH_SHOW_ME = 'api/user/me';
 
     /**
      * User
@@ -107,23 +115,21 @@ abstract class BaseUserTest extends TestCase
             'data' => [
                 '*' => $this->getUserStructure()
             ],
+            'links' => [
+                'path',
+                'firstPageUrl',
+                'lastPageUrl',
+                'nextPageUrl',
+                'prevPageUrl',
+            ],
             'meta' => [
-                'links' => [
-                    'path',
-                    'firstPageUrl',
-                    'lastPageUrl',
-                    'nextPageUrl',
-                    'prevPageUrl',
-                ],
-                'meta' => [
-                    'currentPage',
-                    'from',
-                    'lastPage',
-                    'perPage',
-                    'to',
-                    'total',
-                    'count',
-                ],
+                'currentPage',
+                'from',
+                'lastPage',
+                'perPage',
+                'to',
+                'total',
+                'count',
             ]
 
         ];
