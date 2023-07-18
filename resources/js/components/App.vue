@@ -1,17 +1,33 @@
 <template>
-  <component :is="layout">
+  <component :is="setLayout">
     <router-view v-model:layout="layout"/>
   </component>
 </template>
 
 <script>
+import DefaultLayout from "../layouts/DefaultLayout.vue";
+import MainLayout from "../layouts/MainLayout.vue";
+
+const layouts = {
+  'MainLayout': MainLayout,
+  'DefaultLayout': DefaultLayout
+}
+
 export default {
   name: "App",
+  components: {
+    DefaultLayout
+  },
   data() {
     return {
-      layout: 'div',
+      layout: 'DefaultLayout',
       hello1: 'Hello1'
     };
+  },
+  computed: {
+    setLayout() {
+      return layouts[this.layout];
+    }
   }
 }
 </script>

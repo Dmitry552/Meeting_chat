@@ -3,13 +3,16 @@ Hello
 </template>
 
 <script>
-import DefaultLayout from '../layouts/DefaultLayout.vue';
+import AddLayoutMixin from "../mixins/AddLayoutMixin";
 
 export default {
   name: "Home",
-  created() {
-    this.$emit('update:layout', DefaultLayout)
-  }
+  mixins: [AddLayoutMixin],
+  data() {
+    return {
+      layoutName: 'main'
+    }
+  },
 }
 </script>
 

@@ -1,29 +1,20 @@
 <template>
-  <div class="LayoutDefault">
-    <nav class="LayoutDefault__nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <main class="LayoutDefault__main">
-      <slot/>
-    </main>
-    <footer class="LayoutDefault__footer">
-    </footer>
-  </div>
+  <main class="default__main">
+    <h1 class="default__warning">
+      Вы забыли установить "layoutName" на страницу!!
+    </h1>
+    <slot/>
+  </main>
 </template>
 
 <script>
 export default {
-  name: "LayoutDefault",
-  created() {
-    console.log('created')
-  },
-  mounted() {
-    console.log('mounted')
-  }
+  name: "MailLayout",
 }
 </script>
 
 <style scoped>
-
+.default__warning {
+  color: #c74646;
+}
 </style>

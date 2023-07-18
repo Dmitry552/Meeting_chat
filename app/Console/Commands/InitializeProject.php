@@ -56,7 +56,7 @@ class InitializeProject extends Command
         $this->line('Run all migrations!');
         $bar->advance();
         $this->newLine();
-        $this->call('migrate:fresh');
+        $this->call('migrate:refresh');
 
         $this->newLine();
         $this->line('Seed the database with records!');
