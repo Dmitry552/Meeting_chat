@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthUserController::class, 'login']);
 Route::post('create', [UserController::class, 'store']);
-
+Route::get('/', [UserController::class, 'index']);
 Route::middleware([
     'auth:user',
 ])
