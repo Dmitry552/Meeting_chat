@@ -1,15 +1,19 @@
 <template>
-  <div v-for="clientID in clients">
-    <video
-        :key="clientID"
-        ref="videos"
-        autoplay
-        playsinline
-    />
+  <div class="">
+    <div class="client_list"></div>
+    <div class="video_list">
+      <div v-for="clientID in clients">
+        <video
+            :key="clientID"
+            id="clientID"
+            ref="videos"
+            autoplay
+            playsinline
+        />
+      </div>
+    </div>
+    <div class="chat"></div>
   </div>
-
-  Room
-  {{ $route.params.id }}
 </template>
 
 <script>

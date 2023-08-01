@@ -7,6 +7,7 @@
         <title>Meeting Chat</title>
 
         @vite('resources/js/app.js')
+        @vite('resources/css/app.css')
     </head>
     <body class="app">
         <div id="app"></div>
