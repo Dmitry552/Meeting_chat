@@ -50,7 +50,6 @@ export default {
       layoutName: 'main',
       rooms: [],
       roomID: '',
-      placeholder: ''
     }
   },
   methods: {
@@ -67,9 +66,6 @@ export default {
     socket() {
       return socket;
     },
-    placeholder() {
-      return this.$t("home.or");
-    }
   },
   created() {
     this.socket.on(ACTIONS.SHARE_ROOMS, ({rooms = []}) => {

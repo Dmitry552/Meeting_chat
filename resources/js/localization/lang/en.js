@@ -7,5 +7,15 @@ export default {
   },
   handler: {
     'log in': 'Log in'
+  },
+  logIn: {
+    'sign in to': 'Sign in to your account',
+    'email': 'Your email',
+    'password': 'Password',
+    'remember': 'Remember me',
+    'forgot': 'Forgot password?',
+    'do not account': 'Don’t have an account yet?',
+    'sign up': 'Sign up',
+    'sign in': 'Sign in'
   }
 };

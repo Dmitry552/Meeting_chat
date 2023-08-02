@@ -7,10 +7,12 @@
 <script>
 import DefaultLayout from "../layouts/DefaultLayout.vue";
 import MainLayout from "../layouts/MainLayout.vue";
+import LoginLayout from "../layouts/LoginLayout.vue";
 
 const layouts = {
   'MainLayout': MainLayout,
-  'DefaultLayout': DefaultLayout
+  'DefaultLayout': DefaultLayout,
+  'LoginLayout': LoginLayout
 }
 
 export default {

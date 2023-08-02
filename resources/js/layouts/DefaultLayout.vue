@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "MailLayout",
+  name: "DefaultLayout",
 }
 </script>
 
