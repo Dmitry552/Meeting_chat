@@ -5,6 +5,7 @@ import messages from './lang/index.js';
 const i18n = createI18n({
   locale: getLocalization(),
   fallbackLocale: 'en',
+  globalInjection: true,
   messages,
 });
 

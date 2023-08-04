@@ -1,9 +1,16 @@
 export default {
+  errors: {
+    string: {
+      required: 'Поле {value} обов\’язкове для заповнення!',
+      email: 'Має бути дійсний email!',
+      min: '{value} має містити принаймні {number} символів!'
+    }
+  },
   home: {
     'create new room': 'Створити нову кімнату',
     'or': 'або',
     'id room': 'id кімнати',
-    'enter': 'Увійти до вже створенної'
+    'enter': 'Увійти до вже створеної'
   },
   handler: {
     'log in': 'Увійти'

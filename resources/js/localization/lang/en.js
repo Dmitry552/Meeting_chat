@@ -1,4 +1,11 @@
 export default {
+  errors: {
+    string: {
+      required: 'The {value} field is required!',
+      email: 'Must be a valid email!',
+      min: '{value} must be at least {number} characters!'
+    }
+  },
   home: {
     'create new room': 'Create new room',
     'or': 'or',

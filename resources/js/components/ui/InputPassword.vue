@@ -1,6 +1,8 @@
 <template>
   <div>
-    <label v-if="showLabel" for="password" class="block mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+    <label v-if="showLabel" for="password" class=" after:content-['*'] after:ml-0.5 after:text-red-500 block mb-2
+                                            text-sm font-medium text-gray-500 dark:text-gray-400"
+    >
       <slot/>
     </label>
     <div class="relative">
@@ -15,6 +17,7 @@
       focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700
       dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
       dark:focus:border-blue-500"
+        :class="{['dark:border-red-500 border-red-500']: error}"
       >
       <div @click="handleShowPassword" class="absolute top-0 right-0 h-full flex items-center mr-2 cursor-pointer">
         <svg v-if="showPassword" class="h-[20px] w-[20px] text-black dark:text-white"  viewBox="0 0 24 24"  fill="none"
@@ -48,6 +51,10 @@ export default {
       type: [String, Number],
       default: ''
     },
+    error: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

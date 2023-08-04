@@ -1,4 +1,11 @@
 export default {
+  errors: {
+    string: {
+      required: 'Поле {value} обязательно для заполнения!',
+      email: 'Должен быть действующий email!',
+      min: '{value} должно быть не менее {number} символов!'
+    }
+  },
   home: {
     'create new room': 'Создать новую комнату',
     'or': 'или',
