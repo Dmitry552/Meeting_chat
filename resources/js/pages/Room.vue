@@ -4,11 +4,11 @@
     <div class="video_list">
       <div v-for="clientID in clients">
         <video
-            :key="clientID"
-            id="clientID"
-            ref="videos"
-            autoplay
-            playsinline
+          :key="clientID"
+          id="clientID"
+          ref="videos"
+          autoplay
+          playsinline
         />
       </div>
     </div>

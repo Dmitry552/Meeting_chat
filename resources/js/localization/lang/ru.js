@@ -3,7 +3,8 @@ export default {
     string: {
       required: 'Поле {value} обязательно для заполнения!',
       email: 'Должен быть действующий email!',
-      min: '{value} должно быть не менее {number} символов!'
+      min: '{value} должно быть не менее {number} символов!',
+      oneOf: 'Пароли должны быть одинаковыми!'
     }
   },
   home: {
@@ -24,5 +25,12 @@ export default {
     'do not account': 'У вас еще нет учетной записи?',
     'sign up': 'Зарегистрироваться',
     'sign in': 'Войти'
+  },
+  registration: {
+    register: 'Зарегистрируйте новую учетную запись',
+    name: 'Ваше имя',
+    passwordConfirm: 'Подтвердите пароль',
+    'i accept': 'Я принимаю',
+    terms: 'Условия и положения'
   }
 }

@@ -21,13 +21,24 @@
         <theme-selection/>
         <div class="lg:flex lg:flex-1 lg:justify-end" v-if="showLogIn">
           <router-link
-            to="/log-in"
-            class=" flex items-center text-sm font-semibold leading-6 text-gray-800 dark:text-white dark:hover:text-gray-200"
+            to="/sign-in"
+            class="flex items-center text-sm font-semibold leading-6 text-gray-800 dark:text-white
+              dark:hover:text-gray-200"
           >
             {{$t("handler['log in']")}}
             <span aria-hidden="true">
-                <svg class="ml-1 w-[15px] h-[15px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.1" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                <svg
+                  class="ml-1 w-[15px] h-[15px] text-gray-800 dark:text-white"
+                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.1" d="M1 5h12m0 0L9 1m4 4L9 9"
+                  />
                 </svg>
               </span>
           </router-link>

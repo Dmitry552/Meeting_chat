@@ -1,7 +1,8 @@
 import Home from "./pages/Home.vue";
 import Room from "./pages/Room.vue";
 import NotFound from "./pages/NotFound.vue";
-import LogIn from "./pages/LogIn.vue";
+import SignIn from "./pages/SignIn.vue";
+import SignUp from "./pages/SignUp.vue";
 
 
 const routes = [
@@ -10,8 +11,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/log-in',
-    component: LogIn
+    path: '/sign-in',
+    component: SignIn
+  },
+  {
+    path: '/sign-up',
+    component: SignUp
   },
   {
     path: '/room/:id',

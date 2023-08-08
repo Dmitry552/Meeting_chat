@@ -3,7 +3,8 @@ export default {
     string: {
       required: 'The {value} field is required!',
       email: 'Must be a valid email!',
-      min: '{value} must be at least {number} characters!'
+      min: '{value} must be at least {number} characters!',
+      oneOf: 'Passwords must be the same!'
     }
   },
   home: {
@@ -24,5 +25,12 @@ export default {
     'do not account': 'Don’t have an account yet?',
     'sign up': 'Sign up',
     'sign in': 'Sign in'
+  },
+  registration: {
+    register: 'Register a new account',
+    name: 'Your name',
+    passwordConfirm: 'Confirm password',
+    'i accept': 'I accept the',
+    terms: 'Terms and Conditions'
   }
 };
