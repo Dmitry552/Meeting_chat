@@ -1,6 +1,6 @@
 <template>
-  <header class="bg-white absolute w-full px-2 dark:bg-gray-600">
-    <nav class="mx-auto flex max-w-full items-center justify-between p-3 lg:px-3">
+  <header class="bg-white absolute w-full px-2 dark:bg-gray-600 z-50">
+    <nav class="mx-auto flex max-w-full items-center justify-between p-2 lg:px-3">
       <div class="flex lg:flex-1">
         <router-link to="/" class="-m-1.5 p-1.5" v-if="showLogo">
           <span class="sr-only">Your Company</span>
@@ -53,10 +53,7 @@ import LocalizationSelection from "../LocalizationSelection.vue";
 import ThemeSelection from "../ThemeSelection.vue";
 export default {
   name: "Header",
-  components: {
-    'localization-selection': LocalizationSelection,
-    'theme-selection': ThemeSelection
-  },
+  components: {LocalizationSelection, ThemeSelection},
   props: {
     showLogIn: {
       type: Boolean,
