@@ -1,12 +1,12 @@
 <template>
   <div
-    :class="['relative transition-all ease-in-out duration-100 bg-white cursor-pointer',
-      'shadow-[0px_0px_20px_0px_#d1d5db] z-0',
-      showClientList ? 'w-[300px]' : 'w-0']"
+    :class="['relative transition-all ease-in-out duration-200 bg-white cursor-pointer',
+    'shadow-[0px_0px_20px_0px_#d1d5db] z-0',
+    showChat ? 'w-[300px]' : 'w-0']"
   >
     <div
-      @click="handleHidingClientList"
-      class="absolute transition-all ease-in-out duration-100 top-14 right-6 hover:right-7"
+      @click="handleHidingChat"
+      class="absolute transition-all ease-in-out duration-100 top-14 left-6 hover:left-7"
     >
       <svg
         class="w-6 h-6 text-gray-300 dark:text-white hover:text-gray-500"
@@ -20,7 +20,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M13 5H1m0 0 4 4M1 5l4-4"
+          d="M1 5h12m0 0L9 1m4 4L9 9"
         />
       </svg>
     </div>
@@ -29,16 +29,16 @@
 
 <script>
 export default {
-  name: "ClientList",
+  name: "TextChat",
   props: {
-    showClientList: {
+    showChat: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-    handleHidingClientList() {
-      this.$emit('hidingClientList')
+    handleHidingChat() {
+      this.$emit('hidingShowChat');
     }
   }
 }
