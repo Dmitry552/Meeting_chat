@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen">
-    <m-header :showLogIn="false"/>
+    <m-header/>
     <main class="bg-white dark:bg-gray-600 h-full px-2 flex
           justify-center items-center overflow-hidden"
     >
@@ -9,10 +9,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "LoginLayout",
-}
+<script lang="ts" setup>
 </script>
 
 <style scoped>

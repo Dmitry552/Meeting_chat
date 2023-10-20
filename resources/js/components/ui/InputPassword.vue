@@ -1,3 +1,44 @@
+<script lang="ts" setup>
+import {ref, watch} from "vue";
+
+type TInputPasswordProps = {
+  showLabel: boolean,
+  placeholder: string,
+  modelValue: string,
+  error: boolean,
+  name: string
+}
+
+type TInputPasswordEmits = {
+  (e: 'update:modelValue', value: string): void
+}
+
+const showPassword = ref<boolean>(false);
+const type = ref<string>('password');
+
+const props = withDefaults(defineProps<TInputPasswordProps>(), {
+  showLabel: true,
+  placeholder: '••••••••',
+  modelValue: '',
+  error: false,
+  name: 'password'
+});
+
+const emit = defineEmits<TInputPasswordEmits>()
+
+function handleInput(event: Event) {
+  emit('update:modelValue', (event.target as HTMLInputElement).value)
+}
+
+function handleShowPassword() {
+  showPassword.value = !showPassword.value;
+}
+
+watch<boolean>(showPassword, () => {
+  type.value === 'password' ? type.value = 'text' : type.value = 'password'
+});
+</script>
+
 <template>
   <div>
     <label
@@ -54,53 +95,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: "InputPassword",
-  props: {
-    showLabel: {
-      type: Boolean,
-      default: true
-    },
-    placeholder: {
-      type: String,
-      default: '••••••••'
-    },
-    modelValue: {
-      type: [String, Number],
-      default: ''
-    },
-    error: {
-      type: Boolean,
-      default: false
-    },
-    name: {
-      type: String,
-      default: 'password'
-    }
-  },
-  data() {
-    return {
-      showPassword: false,
-      type: 'password'
-    }
-  },
-  methods: {
-    handleInput(event) {
-      this.$emit('update:modelValue', event.target.value)
-    },
-    handleShowPassword() {
-      this.showPassword = !this.showPassword;
-    }
-  },
-  watch: {
-    showPassword() {
-      this.type === 'password' ? this.type = 'text' : this.type = 'password'
-    }
-  }
-}
-</script>
 
 <style scoped>
 

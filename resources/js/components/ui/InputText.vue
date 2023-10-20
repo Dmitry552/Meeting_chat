@@ -1,3 +1,40 @@
+<script lang="ts" setup>
+import {useField} from "vee-validate";
+import {ref, watch} from "vue";
+
+type TInputTextProps = {
+  title?: string,
+  type?: string,
+  name: string,
+  placeholder?: string,
+  required?: boolean
+}
+
+const props = withDefaults(defineProps<TInputTextProps>(), {
+  title: '',
+  type: 'text',
+  placeholder: '',
+  required: false
+});
+
+const showPassword = ref<boolean>(false);
+const currentType = ref<string>(props.type);
+
+const { value, errorMessage, setValue } = useField<string | boolean>(props.name);
+
+if (props.type === 'checkbox') {
+  setValue(false);
+}
+
+function handleShowPassword() {
+  showPassword.value = !showPassword.value;
+}
+
+watch<boolean>(showPassword, () => {
+  currentType.value === 'password' ? currentType.value = 'text' : currentType.value = 'password'
+})
+</script>
+
 <template>
   <label
     v-if="title"
@@ -55,64 +92,6 @@
   </div>
   <span v-if="errorMessage" class="text-sm text-red-500">{{errorMessage}}</span>
 </template>
-
-<script>
-import {useField} from "vee-validate";
-
-export default {
-  name: "InputText",
-  setup(props) {
-    const { value, errorMessage, setValue } = useField(() => props.name);
-
-    if (props.type === 'checkbox') {
-      setValue(false);
-    }
-
-    return {
-      value,
-      errorMessage
-    }
-  },
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    type: {
-      type: String,
-      default: 'text'
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    required: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      showPassword: false,
-      currentType: this.type
-    }
-  },
-  methods: {
-    handleShowPassword() {
-      this.showPassword = !this.showPassword;
-    }
-  },
-  watch: {
-    showPassword() {
-      this.currentType === 'password' ? this.currentType = 'text' : this.currentType = 'password'
-    }
-  }
-}
-</script>
 
 <style scoped>
 

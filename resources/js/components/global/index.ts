@@ -1,10 +1,6 @@
 import Header from "./Header.vue";
 
-
-
-
-
-const components = new Map([
+const components = new Map<string, any>([
   ['m-header', Header],
 ]);
 

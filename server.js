@@ -5,14 +5,14 @@
 import express from 'express';
 import { createServer  } from 'http';
 import { Server } from 'socket.io';
-import ACTIONS from './resources/js/socket/actions.js';
+import _ACTIONS from './_actions.js';
 import {version, validate} from "uuid";
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:8000",
+    origin: ["http://localhost:8000", "https://f794-5-180-128-165.ngrok-free.app"],
     credentials: true
   }
 });
@@ -28,7 +28,7 @@ function getClientRooms() {
 
 //При добавлении новой комнаты всем сокетам отправить об этом информацию
 function shareRoomsInfo() {
-  io.emit(ACTIONS.SHARE_ROOMS, {
+  io.emit(_ACTIONS.SHARE_ROOMS, {
     rooms: getClientRooms()
   })
 }
@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
   console.log('Socket connected!');
   shareRoomsInfo(); //При новом подключении шарим инфу по всем комнатам
 
-  socket.on(ACTIONS.JOIN, (config) => {
+  socket.on(_ACTIONS.JOIN, (config) => {
     const {room: roomID} = config;
     const {rooms: joinedRooms} = socket; //комнаты к которым мы уже подключены
 
@@ -48,12 +48,13 @@ io.on('connection', (socket) => {
     const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
 
     clients.forEach((clientID) => {
-      io.to(clientID).emit(ACTIONS.ADD_PEER, {
+      console.log(clientID);
+      io.to(clientID).emit(_ACTIONS.ADD_PEER, {
         peerID: socket.id,
         createOffer: false
       })
 
-      socket.emit(ACTIONS.ADD_PEER, {
+      socket.emit(_ACTIONS.ADD_PEER, {
         peerID: clientID,
         createOffer: true
       })
@@ -70,11 +71,11 @@ io.on('connection', (socket) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
 
       clients.forEach((clientID) => {
-        io.to(clientID).emit(ACTIONS.REMOVE_PEER, {
+        io.to(clientID).emit(_ACTIONS.REMOVE_PEER, {
           peerID: socket.id
         })
 
-        socket.emit(ACTIONS.REMOVE_PEER, {
+        socket.emit(_ACTIONS.REMOVE_PEER, {
           peerID: clientID
         });
       });
@@ -85,22 +86,38 @@ io.on('connection', (socket) => {
     });
   }
 
-  socket.on(ACTIONS.LEAVE, leaveRoom);
+  socket.on(_ACTIONS.LEAVE, leaveRoom);
   socket.on('disconnecting', leaveRoom);
 
-  socket.on(ACTIONS.RELAY_SDP, ({peerID, sessionDescription}) => {
-    io.to(peerID).emit(ACTIONS.SESSION_DESCRIPTION, {
+  socket.on(_ACTIONS.RELAY_SDP, ({room: peerID, sessionDescription}) => {
+    io.to(peerID).emit(_ACTIONS.SESSION_DESCRIPTION, {
       peerID: socket.id,
       sessionDescription
     })
   });
 
-  socket.on(ACTIONS.RELAY_ICE, ({peerID, iceCandidate}) => {
-    io.to(peerID).emit(ACTIONS.ICE_CANDIDATE, {
+  socket.on(_ACTIONS.RELAY_ICE, ({room: peerID, iceCandidate}) => {
+    io.to(peerID).emit(_ACTIONS.ICE_CANDIDATE, {
       peerID: socket.id,
       iceCandidate
     })
   });
+
+  socket.on(_ACTIONS.MUTE_VIDEO_STREAM, () => {
+    const {rooms} = socket;
+    Array.from(rooms).forEach((roomID) => {
+      const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+
+      clients.forEach((clientID) => {
+        if (clientID !== socket.id) {
+          io.to(clientID).emit(_ACTIONS.MUTED_VIDEO_STREAM, {
+            peerID: socket.id,
+            a: 'my'
+          })
+        }
+      });
+    });
+  })
 })
 
 httpServer.listen(PORT, () => {

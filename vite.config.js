@@ -8,10 +8,16 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 export default defineConfig({
   plugins: [
     laravel({
-      input: ['resources/css/app.css', 'resources/js/app.js'],
+      input: ['resources/css/app.css', 'resources/js/app.ts'],
       refresh: true,
     }),
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.endsWith('Layout'),
+        }
+      }
+    }),
     VueI18nPlugin({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './path/to/src/locales/**'),
     }),

@@ -1,3 +1,65 @@
+<script lang="ts" setup>
+import {useForm} from 'vee-validate';
+import {string, object, ref as Ref, ObjectSchema} from 'yup';
+import {ref, computed} from "vue";
+import {useI18n} from "vue-i18n";
+
+type TSchema = {
+  name: string,
+  email: string,
+  password: string,
+  passwordConfirm: string
+}
+
+const {t} = useI18n();
+
+const loading = ref<boolean>(false);
+
+const T = computed<{email: string, password: string, name: string}>(() => {
+  return {
+    email: t('logIn.email'),
+    password: t('logIn.password'),
+    name: t('registration.name')
+  }
+})
+
+const schema = computed<ObjectSchema<TSchema>>(() => object({
+  name: string()
+    .required(t('errors.string.required', {value: T.value.name}))
+    .min(3, t('errors.string.min', {value: T.value.name, number: 3})),
+  email: string()
+    .required(t('errors.string.required', {value: T.value.email}))
+    .email(t('errors.string.email')),
+  password: string()
+    .required(t('errors.string.required', {value: T.value.password}))
+    .min(8, t('errors.string.min', {value: T.value.password, number: 8})),
+  passwordConfirm: string()
+    .required(t('registration.passwordConfirm'))
+    .min(8, t('errors.string.min', {value: T.value.password, number: 8}))
+    .oneOf([Ref('password')], t('errors.string.oneOf')),
+  })
+);
+
+const {handleSubmit, setFieldError} = useForm<TSchema>({
+  validationSchema: schema,
+  initialValues: {
+    name: '',
+    email: '',
+    password: '',
+    passwordConfirm: ''
+  }
+});
+
+const handleSignUp = handleSubmit(value => {
+  loading.value = true;
+  setTimeout(() => {
+    console.log(value)
+    loading.value = false;
+  }, 1000);
+});
+
+</script>
+
 <template>
   <section class="container-lg w-full">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -75,67 +137,6 @@
     </div>
   </section>
 </template>
-
-<script>
-import AddLayoutMixin from "../mixins/AddLayoutMixin.js";
-import {useForm} from 'vee-validate';
-import {string, object, ref as Ref} from 'yup';
-import {ref, computed} from "vue";
-import {useI18n} from "vue-i18n";
-
-export default {
-  name: "SignUp",
-  mixins: [AddLayoutMixin],
-  setup() {
-    const {t} = useI18n();
-
-    const loading = ref(null);
-
-    const T = computed(() => {
-      return {
-        email: t('logIn.email'),
-        password: t('logIn.password'),
-        name: t('registration.name')
-      }
-    })
-
-    const schema = computed(() => object({
-      name: string()
-        .required(t('errors.string.required', {value: T.value.name}))
-        .min(3, t('errors.string.min', {value: T.value.name, number: 3})),
-      email: string()
-        .required(t('errors.string.required', {value: T.value.email}))
-        .email(t('errors.string.email')),
-      password: string()
-        .required(t('errors.string.required', {value: T.value.password}))
-        .min(8, t('errors.string.min', {value: T.value.password, number: 8})),
-      passwordConfirm: string()
-        .required(t('registration.passwordConfirm'))
-        .min(8, t('errors.string.min', {value: T.value.password, number: 8}))
-        .oneOf([Ref('password')], t('errors.string.oneOf')),
-      })
-    );
-
-    const {handleSubmit, setFieldError} = useForm({
-      validationSchema: schema
-    });
-
-    const handleSignUp = handleSubmit(value => {
-      console.log(value)
-    });
-
-    return {
-      handleSignUp,
-      loading
-    }
-  },
-  data() {
-    return {
-      layoutName: 'login'
-    }
-  }
-}
-</script>
 
 <style scoped>
 

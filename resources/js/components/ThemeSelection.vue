@@ -1,42 +1,34 @@
-<script>
-export default {
-  name: "ThemeSelections",
-  data() {
-    return {
-      theme: ''
-    }
-  },
-  methods: {
-    handleThemeSelection() {
-      this.theme === 'dark' ? this.theme = 'light' : this.theme = 'dark';
-    }
-  },
-  created() {
-    if (localStorage.theme === 'dark') {
-      document.documentElement.classList.add('dark');
-      this.theme = 'light';
-    } else if ((!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      this.theme = 'light';
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      this.theme = 'dark';
-    }
-  },
-  watch: {
-    theme(value, newValue) {
-      if (newValue === 'dark') {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      }
-    }
-  }
+<script lang="ts" setup>
+import {ref, watch} from "vue";
+
+const theme = ref<string>('');
+
+function handleThemeSelection(): void {
+  theme.value === 'dark' ? theme.value = 'light' : theme.value = 'dark';
 }
+
+if (localStorage.theme === 'dark') {
+  document.documentElement.classList.add('dark');
+  theme.value = 'light';
+} else if ((!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  document.documentElement.classList.add('dark');
+  localStorage.setItem('theme', 'dark');
+  theme.value = 'light';
+} else {
+  document.documentElement.classList.remove('dark');
+  localStorage.setItem('theme', 'light');
+  theme.value = 'dark';
+}
+
+watch<string>(theme, (value, oldValue) => {
+  if (oldValue === 'dark') {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }
+})
 </script>
 
 <template>

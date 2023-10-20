@@ -1,4 +1,5 @@
 import {io} from 'socket.io-client';
+import {Socket} from "socket.io-client";
 
 const options = {
   'force new connection': true,
@@ -7,6 +8,6 @@ const options = {
   transceivers: ['websocket']
 }
 
-const socket = io('http://localhost:8001', options);
+const socket: Socket = io('http://localhost:8001', options);
 
 export default socket;

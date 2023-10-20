@@ -1,3 +1,15 @@
+<script lang="ts" setup>
+import LocalizationSelection from "../LocalizationSelection.vue";
+import ThemeSelection from "../ThemeSelection.vue";
+
+type THeaderProps = {
+  showLogIn?: boolean,
+  showLogo?: boolean
+}
+
+const props = withDefaults(defineProps<THeaderProps>(), {showLogIn: true, showLogo: true})
+</script>
+
 <template>
   <header class="bg-white absolute w-full px-2 dark:bg-gray-600 z-50">
     <nav class="mx-auto flex max-w-full items-center justify-between p-2 lg:px-3">
@@ -47,25 +59,6 @@
     </nav>
   </header>
 </template>
-
-<script>
-import LocalizationSelection from "../LocalizationSelection.vue";
-import ThemeSelection from "../ThemeSelection.vue";
-export default {
-  name: "Header",
-  components: {LocalizationSelection, ThemeSelection},
-  props: {
-    showLogIn: {
-      type: Boolean,
-      default: true
-    },
-    showLogo: {
-      type: Boolean,
-      default: true
-    }
-  },
-}
-</script>
 
 <style scoped>
 

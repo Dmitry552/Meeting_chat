@@ -1,35 +1,36 @@
-<script>
+<script lang="ts" setup>
 import en from '../../images/en.svg';
 import ru from '../../images/ru.svg';
 import ua from '../../images/ua.svg';
-export default {
-  name: 'LocationSelection',
-  data() {
-    return {
-      langs: ['ru', 'en', 'ua'],
-      show: false
-    }
-  },
-  methods: {
-    flag(lang) {
-      switch (lang) {
-        case 'ru':
-          return ru;
-        case 'en':
-          return en;
-        case 'ua':
-          return ua;
-      }
-    },
-    handleShow() {
-      this.show = !this.show;
-    },
-    handleSelected(event) {
-      this.$i18n.locale = event.target.id;
-      document.documentElement.lang = event.target.id;
-      this.show = false;
-    }
+import {ref} from "vue";
+import {useI18n} from "vue-i18n";
+
+const {locale} = useI18n();
+
+const langs = ref<string[]>(['ru', 'en', 'ua']);
+const show = ref<boolean>(false);
+
+function flag(lang: string): string {
+  switch (lang) {
+    case 'ru':
+      return ru;
+    case 'en':
+      return en;
+    case 'ua':
+      return ua;
+    default:
+      return '';
   }
+}
+
+function handleShow(): void {
+  show.value = !show.value;
+}
+
+function handleSelected(event: Event): void {
+  locale.value = (event.target as HTMLUListElement).id;
+  document.documentElement.lang = (event.target as HTMLUListElement).id;
+  show.value = false;
 }
 </script>
 

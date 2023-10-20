@@ -7,7 +7,7 @@
 
     <title>{{config('app.name', 'Meeting_Chat')}}</title>
 
-    @vite('resources/js/app.js')
+    @vite('resources/js/app.ts')
     @vite('resources/css/app.css')
 </head>
 <body class="app">
