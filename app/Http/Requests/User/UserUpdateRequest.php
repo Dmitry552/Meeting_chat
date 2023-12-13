@@ -9,13 +9,32 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'firstName' => [
+                'string'
+            ],
+            'lastName' => [
+                'string'
+            ],
+            'gender' => [
+                'string',
+                'in:Female,Male,Unknown animal'
+            ],
+            'phone' => [
+                'string'
+            ],
+            'currentAddress' => [
+                'string'
+            ],
+            'permanantAddress' => [
                 'string'
             ],
             'email' => [
-                'email',
-                'unique:users'
-            ]
+                'unique:users',
+                'email'
+            ],
+            'birthday' => [
+                'date'
+            ],
         ];
     }
 }

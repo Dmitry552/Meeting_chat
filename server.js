@@ -12,7 +12,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:8000", "https://f794-5-180-128-165.ngrok-free.app"],
+    origin: ["http://localhost:8000"],
     credentials: true
   }
 });
@@ -48,7 +48,6 @@ io.on('connection', (socket) => {
     const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
 
     clients.forEach((clientID) => {
-      console.log(clientID);
       io.to(clientID).emit(_ACTIONS.ADD_PEER, {
         peerID: socket.id,
         createOffer: false
@@ -61,12 +60,13 @@ io.on('connection', (socket) => {
     })
 
     socket.join(roomID);
-
+    console.log(roomID, joinedRooms);
     shareRoomsInfo();
   })
 
   function leaveRoom() {
     const {rooms} = socket;
+
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
 
@@ -79,9 +79,9 @@ io.on('connection', (socket) => {
           peerID: clientID
         });
       });
-
+      console.log('1', rooms);
       socket.leave(roomID);
-
+      console.log('2', rooms);
       shareRoomsInfo();
     });
   }
@@ -103,16 +103,32 @@ io.on('connection', (socket) => {
     })
   });
 
-  socket.on(_ACTIONS.MUTE_VIDEO_STREAM, () => {
+  socket.on(_ACTIONS.MUTE_VIDEO_STREAM, ({room: peerID, track}) => {
     const {rooms} = socket;
     Array.from(rooms).forEach((roomID) => {
       const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
-
       clients.forEach((clientID) => {
         if (clientID !== socket.id) {
           io.to(clientID).emit(_ACTIONS.MUTED_VIDEO_STREAM, {
             peerID: socket.id,
-            a: 'my'
+            track
+          })
+        }
+      });
+    });
+  })
+
+  socket.on(_ACTIONS.MUTE, ({value, key}) => {
+    const {rooms} = socket;
+    console.log(value, key)
+    Array.from(rooms).forEach((roomID) => {
+      const clients = Array.from(io.sockets.adapter.rooms.get(roomID) || []);
+      clients.forEach((clientID) => {
+        if (clientID !== socket.id) {
+          io.to(clientID).emit(_ACTIONS.MUTED, {
+            peerID: socket.id,
+            value,
+            key
           })
         }
       });

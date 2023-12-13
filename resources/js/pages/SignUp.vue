@@ -3,15 +3,25 @@ import {useForm} from 'vee-validate';
 import {string, object, ref as Ref, ObjectSchema} from 'yup';
 import {ref, computed} from "vue";
 import {useI18n} from "vue-i18n";
+import swal from "sweetalert";
+import {errorHandler} from "../utils/helpers";
+import {useStore} from "../store";
+import {useRouter} from "vue-router";
 
 type TSchema = {
   name: string,
   email: string,
   password: string,
-  passwordConfirm: string
+  password_confirmation: string
 }
 
+type TRegistrationData = {
+  remember_me: boolean
+} & TSchema
+
 const {t} = useI18n();
+const store = useStore();
+const {push} = useRouter();
 
 const loading = ref<boolean>(false);
 
@@ -33,7 +43,7 @@ const schema = computed<ObjectSchema<TSchema>>(() => object({
   password: string()
     .required(t('errors.string.required', {value: T.value.password}))
     .min(8, t('errors.string.min', {value: T.value.password, number: 8})),
-  passwordConfirm: string()
+  password_confirmation: string()
     .required(t('registration.passwordConfirm'))
     .min(8, t('errors.string.min', {value: T.value.password, number: 8}))
     .oneOf([Ref('password')], t('errors.string.oneOf')),
@@ -46,16 +56,26 @@ const {handleSubmit, setFieldError} = useForm<TSchema>({
     name: '',
     email: '',
     password: '',
-    passwordConfirm: ''
+    password_confirmation: ''
   }
 });
 
+const registerUser = (data: TRegistrationData) => store.dispatch('registrationUser', data);
+
 const handleSignUp = handleSubmit(value => {
   loading.value = true;
-  setTimeout(() => {
-    console.log(value)
-    loading.value = false;
-  }, 1000);
+  registerUser(value as TRegistrationData)
+    .then(() => {
+      loading.value = false;
+      swal({
+        title: "Ok!",
+        icon: "success",
+      }).then(() => {
+        push('/');
+      });
+    }).catch((err) => {
+    errorHandler(err, setFieldError);
+  });
 });
 
 </script>

@@ -1,25 +1,32 @@
-<script lang="ts">
-export default {
-  data() {
-    return {
-      layoutName: 'login'
-    }
-  }
-}
-</script>
-
 <script lang="ts" setup>
 import {useForm} from 'vee-validate';
 import {string, object, ObjectSchema} from 'yup';
 import {useI18n} from "vue-i18n";
 import {computed, ref} from "vue";
+import {useStore} from "../store";
+import swal from 'sweetalert';
+import {useRouter} from "vue-router";
+import {errorHandler} from "../utils/helpers";
+import SocialPanel from "../components/SocialPanel.vue";
 
 type TSchema = {
   email: string,
   password: string
 }
 
+type TLoginData = {
+  remember_me: boolean
+} & TSchema
+
+type TSSOData = {
+  provider: string,
+  token?: string,
+  code?: string
+}
+
 const {t} = useI18n();
+const {push} = useRouter();
+const store = useStore();
 
 const loading = ref<boolean>(false);
 const IName = 'login';
@@ -39,7 +46,7 @@ const schema = computed<ObjectSchema<TSchema>>(() => object({
       .email(t('errors.string.email')),
     password: string()
       .required(t('errors.string.required', {value: T.value.password}))
-      .min(8, t('errors.string.min', {value: T.value.password, number: 8})),
+      .min(3, t('errors.string.min', {value: T.value.password, number: 8})),
   })
 );
 
@@ -51,13 +58,51 @@ const {handleSubmit, setFieldError} = useForm<TSchema>({
   }
 });
 
+const authUser = (data: TLoginData) => store.dispatch('login', data);
+const getSSOData = (data: TSSOData) => store.dispatch('getSSOData', data);
+
 const handleSignIn = handleSubmit(value => {
-  console.log(value)
+  loading.value = true;
+  authUser(value as TLoginData)
+    .then(() => {
+      swal({
+        title: "Ok!",
+        icon: "success",
+      }).then(() => {
+        push('/');
+      });
+  }).catch((err) => {
+    errorHandler(err, setFieldError);
+  }).finally(() => loading.value = false);
 });
+
+const handleLoginGoogle = (response: any) => {
+  loading.value = true;
+  getSSOData({
+      provider: 'google',
+      token: response.access_token
+    }).then(({data}) => {
+      console.log('google', data);
+      swal({
+        title: "Ok!",
+        icon: "success",
+      }).then(() => {
+        push('/');
+      });
+    }).catch(err => {
+      errorHandler(err);
+    }).finally(() => loading.value = false);
+}
+
+const handleLoginFacebook = () => {
+  const link = document.createElement('a');
+  link.href = `${import.meta.env.VITE_APP_URL}/auth/facebook/redirect`;
+  link.click();
+}
 </script>
 
 <template>
-  <section class="container-lg w-full">
+  <section class="container">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <div
         class="w-full bg-white rounded-lg shadow-md dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800
@@ -93,17 +138,17 @@ const handleSignIn = handleSubmit(value => {
             <div class="flex items-center justify-between">
               <div class="flex items-start">
                 <ui-input-text
-                  name="remember"
+                  name="remember_me"
                   type="checkbox"
                 />
                 <div class="ml-3 text-sm">
-                  <label for="remember" class="text-gray-500 dark:text-gray-400">
+                  <label for="remember_me" class="text-gray-500 dark:text-gray-400">
                     <!--                      Remember me-->
                     {{$t("logIn['remember']")}}
                   </label>
                 </div>
               </div>
-              <router-link to="#" class="ml-2 text-sm font-medium text-gray-500 hover:underline dark:text-gray-400">
+              <router-link to="/password/forgot" class="ml-2 text-sm font-medium text-gray-500 hover:underline dark:text-gray-400">
                 <!--                Forgot password?-->
                 {{$t("logIn['forgot']")}}
               </router-link>
@@ -114,6 +159,7 @@ const handleSignIn = handleSubmit(value => {
               <!--              Sign in-->
               {{$t("logIn['sign in']")}}
             </ui-button>
+            <social-panel @googleLogin="handleLoginGoogle"/>
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               <!--              Don’t have an account yet?-->
               {{$t("logIn['do not account']")}}

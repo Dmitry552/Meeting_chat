@@ -57,7 +57,8 @@ trait UserAuthorizedTrait
             $this->getUrlLogin(),
             [
                 'email' => $email,
-                'password' => $password
+                'password' => $password,
+                'remember_me' => false
             ]
         );
 
@@ -73,5 +74,5 @@ trait UserAuthorizedTrait
         return $response;
     }
 
-    abstract public function getUrlLogin(): string;
+    abstract protected function getUrlLogin(): string;
 }

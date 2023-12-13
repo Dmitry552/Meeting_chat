@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Requests\User\ForgotPasswordRequest;
+use App\Http\Requests\User\ResetPasswordRequest;
 use App\Http\Requests\User\UserLoginRequest;
 use App\Http\Services\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -10,9 +12,9 @@ class AuthUserController extends BaseUserController
 {
     private AuthService $service;
 
-    public function __construct()
+    public function __construct(AuthService $service)
     {
-        $this->service = new AuthService($this->currentGuard());
+        $this->service = $service;
     }
 
     /**
@@ -54,5 +56,23 @@ class AuthUserController extends BaseUserController
     public function refresh(): JsonResponse
     {
         return $this->service->refresh();
+    }
+
+    /**
+     * @param ForgotPasswordRequest $request
+     * @return JsonResponse
+     */
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        return $this->service->forgotPassword($request->all());
+    }
+
+    /**
+     * @param ResetPasswordRequest $request
+     * @return JsonResponse
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        return $this->service->resetPassword($request->all());
     }
 }

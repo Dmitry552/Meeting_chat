@@ -11,4 +11,16 @@ class UserRepository extends BaseRepository
     {
         $this->model = $user;
     }
+
+    /**
+     * @param string $email
+     * @return User | null
+     */
+    public function getUserForEmail(string $email): User | null
+    {
+        /** @var User $user */
+        $user = $this->model->query()->where('email', $email)->first();
+
+        return $user;
+    }
 }

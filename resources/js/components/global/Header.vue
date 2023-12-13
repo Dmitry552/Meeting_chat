@@ -1,20 +1,22 @@
 <script lang="ts" setup>
 import LocalizationSelection from "../LocalizationSelection.vue";
 import ThemeSelection from "../ThemeSelection.vue";
+import AvatarBlock from "../AvatarBlock.vue";
 
 type THeaderProps = {
   showLogIn?: boolean,
-  showLogo?: boolean
+  showLogo?: boolean,
+  showAvatar?: boolean
 }
 
-const props = withDefaults(defineProps<THeaderProps>(), {showLogIn: true, showLogo: true})
+const props = withDefaults(defineProps<THeaderProps>(), {showLogIn: true, showLogo: true, showAvatar: true})
 </script>
 
 <template>
   <header class="bg-white absolute w-full px-2 dark:bg-gray-600 z-50">
     <nav class="mx-auto flex max-w-full items-center justify-between p-2 lg:px-3">
       <div class="flex lg:flex-1">
-        <router-link to="/" class="-m-1.5 p-1.5" v-if="showLogo">
+        <router-link to="/" class="-m-1.5 p-1.5" v-if="props.showLogo">
           <span class="sr-only">Your Company</span>
           <svg class="h-6 w-auto" viewBox="0 0 174 104" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M17 104L17 76L43 76L17 104Z" fill="#1D4ED8"/>
@@ -31,7 +33,7 @@ const props = withDefaults(defineProps<THeaderProps>(), {showLogIn: true, showLo
       <div class="flex items-center">
         <localization-selection/>
         <theme-selection/>
-        <div class="lg:flex lg:flex-1 lg:justify-end" v-if="showLogIn">
+        <div class="lg:flex lg:flex-1 lg:justify-end" v-if="props.showLogIn">
           <router-link
             to="/sign-in"
             class="flex items-center text-sm font-semibold leading-6 text-gray-800 dark:text-white
@@ -55,6 +57,9 @@ const props = withDefaults(defineProps<THeaderProps>(), {showLogIn: true, showLo
               </span>
           </router-link>
         </div>
+        <avatar-block
+          v-if="props.showAvatar"
+        />
       </div>
     </nav>
   </header>

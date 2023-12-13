@@ -10,7 +10,9 @@ enum ACTIONS {
   ICE_CANDIDATE = 'ice_candidate', //Реагирование на нового кандидата
   SESSION_DESCRIPTION = 'session_description', //Когда придет новая сессия
   MUTE_VIDEO_STREAM = 'mute_video_stream', //Отключит поток видео
-  MUTED_VIDEO_STREAM = 'muted_video_stream' //Обновить у всех свой поток без видео
+  MUTED_VIDEO_STREAM = 'muted_video_stream', //Обновить у всех свой поток без видео
+  MUTE = 'mute',
+  MUTED = 'muted'
 }
 export default ACTIONS;
 

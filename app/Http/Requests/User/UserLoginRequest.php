@@ -23,6 +23,10 @@ class UserLoginRequest extends FormRequest
                 'required',
                 Password::min(3)
                     ->numbers()
+            ],
+            'remember_me' => [
+                'required',
+                'boolean'
             ]
         ];
     }

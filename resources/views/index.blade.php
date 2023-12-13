@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{app()->getLocale()}}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.svg">
 
-    <title>{{config('app.name', 'Meeting_Chat')}}</title>
+    <title>{{config('app.name', "Meeting Chat")}}</title>
 
     @vite('resources/js/app.ts')
     @vite('resources/css/app.css')
 </head>
-<body class="app">
+    <body class="app">
     <div id="document-preload" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         <img src="loading.gif" alt="" />
     </div>

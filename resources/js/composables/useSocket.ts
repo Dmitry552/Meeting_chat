@@ -1,5 +1,5 @@
 import socket from "../socket";
-import ACTIONS, {TActions} from "../socket/actions.js";
+import {TActions} from "../socket/actions.js";
 
 export default function useSocket() {
   const action = <T extends { room: string }>(action: TActions, data?: T): void => {

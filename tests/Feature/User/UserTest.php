@@ -3,12 +3,18 @@
 namespace Tests\Feature\User;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\Feature\User\Traits\UserAuthorizedTrait;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Hash;
 
 class UserTest extends BaseUserTest
 {
+    protected function getUrlLogin(): string
+    {
+        return parent::ROUTE_AUTH_LOGIN;
+    }
+
     /**
      * A basic feature test example.
      *
@@ -16,15 +22,19 @@ class UserTest extends BaseUserTest
      */
     public function test_user_creation()
     {
+        Event::fake();
+
         $response = $this->postJson(
             self::ROUTE_USER_CREATE,
             [
-                'name'     => 'HelloUser',
                 'email'    => '12345678@gmail.com',
                 'password' => '12345678',
-                'password_confirmation' => '12345678'
+                'password_confirmation' => '12345678',
+                'remember_me' => false
             ]
         );
+
+        Event::assertDispatched(Registered::class);
 
         $response->assertOk()
             ->assertJsonStructure(self::getCreationUserStructure())
@@ -77,9 +87,9 @@ class UserTest extends BaseUserTest
     {
         $response = $this->userAuthorizationWithHeaderAdded()
             ->putJson(
-                self::ROUTE_USER_DESTROY . '2',
+                self::ROUTE_USER_UPDATE . '11',
                 [
-                    "name" => 'Stepan',
+                    "firstName" => 'Stepan',
                     'email' => 'hello@gmail.com'
                 ]
             );
@@ -88,8 +98,48 @@ class UserTest extends BaseUserTest
             ->assertJsonStructure(self::getUserStructure());
 
         $this->assertDatabaseHas('users', [
-            "name" => 'Stepan',
+            "firstName" => 'Stepan',
             'email' => 'hello@gmail.com',
         ]);;
+    }
+
+    public function test_upload_avatar()
+    {
+        $oldAvatarPath = User::query()->find(11)->avatarPath;
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->userAuthorizationWithHeaderAdded()
+            ->post(
+                self::ROUTE_USER_AVATAR,
+                [
+                    'avatar' => $file
+                ]
+            );
+
+        $newAvatarPath = User::query()->find(11)->avatarPath;
+
+        $response->assertOk();
+        $this->assertNotEquals($oldAvatarPath, $newAvatarPath);
+    }
+
+    public function test_upload_password()
+    {
+        $oldPassword = User::query()->find(11)->password;
+
+        $response = $this->userAuthorizationWithHeaderAdded()
+            ->postJson(
+                self::ROUTE_USER_UPLOAD_PASSWORD . '11',
+                [
+                    'oldPassword' => '12345678',
+                    'password' => '123456789',
+                    'password_confirmation' => '123456789'
+                ]
+            );
+
+        $newPassword = User::query()->find(11)->password;
+
+        $response->assertOk();
+        $this->assertNotEquals($oldPassword, $newPassword);
     }
 }

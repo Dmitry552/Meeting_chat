@@ -1,7 +1,15 @@
 export type User = {
   id: number,
-  name: string
-  email_verified: string
+  firstName: string,
+  lastName: string,
+  gender: TGenderUser,
+  phone: string,
+  currentAddress: string,
+  permanantAddress: string,
+  birthday: string | Date,
+  avatarPath: string,
+  email: string,
+  email_verified: string,
   created_at: string,
   updated_at: string
 };
@@ -18,6 +26,16 @@ export type Client = {
 } | null
 
 export type Clients = Client[];
+
+export type TDevice = NoReadonly<Omit<MediaDeviceInfo, 'toJSON'>>;
+
+export type TGenderUser = 'Female' | 'Male' | 'Unknown animal';
+
+// Custom utility types
+
+export type NoReadonly<T> = {
+  -readonly [P in keyof T]: T[P]
+}
 
 
 

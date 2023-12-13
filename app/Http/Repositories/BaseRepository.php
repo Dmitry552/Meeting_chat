@@ -10,6 +10,7 @@ abstract class BaseRepository
     protected Model $model;
 
     /**
+     * @param $data
      * @return LengthAwarePaginator
      */
     public function index($data): LengthAwarePaginator

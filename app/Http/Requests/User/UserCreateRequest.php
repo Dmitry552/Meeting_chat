@@ -10,19 +10,41 @@ class UserCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
+            'firstName' => [
+                'string'
+            ],
+            'lastName' => [
+                'string'
+            ],
+            'gender' => [
+                'string',
+                'in:Female,Male,Unknown animal'
+            ],
+            'phone' => [
+                'string'
+            ],
+            'currentAddress' => [
+                'string'
+            ],
+            'permanantAddress' => [
                 'string'
             ],
             'email' => [
                 'required',
+                'unique:users',
                 'email'
+            ],
+            'birthday' => [
+                'date'
             ],
             'password' => [
                 'required',
                 'confirmed',
                 Password::min(3)
                     ->numbers()
+            ],
+            'remember_me' => [
+                'boolean'
             ]
         ];
     }

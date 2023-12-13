@@ -8,6 +8,7 @@ import useSocket from "../composables/useSocket";
 import {computed, ref} from "vue";
 import {Client, Clients} from "../types";
 import MeetingControl from "./MeetingControl.vue";
+import swal from 'sweetalert';
 
 export type TCurrentVideo = {
   client: Client
@@ -33,6 +34,7 @@ const {
   currentAudioInputDevices,
   currentAudioOutputDevices,
   startCapture,
+  addNewClient,
   handleMuteVideo,
   handleMuteAudio,
   handleScreenBroadcast,
@@ -40,11 +42,18 @@ const {
   setDevices
 } = useWebRTC(route.params.id as string);
 
+
 startCapture()
   .then(() => {
     action(ACTIONS.JOIN, {room: route.params.id as string})
   })
-  .catch((error) => console.error(`Error getting userMedia: ${error}`))
+  .catch((error) => {
+    showVideo.value = false;
+    showAudio.value = false;
+    addNewClient(LOCAL_VIDEO);
+    swal('Ops...', `${error}`, 'error');
+    console.error(`Error getting userMedia: ${error}`)
+  })
 
 const currentVideo = ref<Client | null>(null);
 const allClients = ref<Clients>([]);

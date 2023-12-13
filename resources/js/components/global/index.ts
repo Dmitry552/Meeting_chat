@@ -1,7 +1,7 @@
 import Header from "./Header.vue";
 
-const components = new Map<string, any>([
+const custom_components = new Map<string, any>([
   ['m-header', Header],
 ]);
 
-export default components;
+export default custom_components;

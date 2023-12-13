@@ -1,15 +1,19 @@
-import {createStore, ModuleTree, StoreOptions} from "vuex";
-import {Store} from 'vuex';
-import modules from "./modules/index";
+import { InjectionKey } from 'vue'
+import {createStore, Store, useStore as baseUseStore} from "vuex";
 import {TRootState} from "./types";
 import UserModule from "./modules/User/index";
+import RoomModule from "./modules/Room/index";
+import AuthModule from "./modules/Auth";
 
-const options: StoreOptions<TRootState> = {
+export const key: InjectionKey<Store<TRootState>> = Symbol()
+
+export const store: Store<TRootState> = createStore<TRootState>({
   modules: {
-    UserModule
+    user: UserModule,
+    auth: AuthModule
   }
+});
+
+export function useStore () {
+  return baseUseStore(key)
 }
-
-const store: Store<TRootState> = createStore(options);
-
-export default store;

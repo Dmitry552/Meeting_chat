@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {toRef} from "vue";
+import {toRef, watch} from "vue";
 import {Client, Clients} from '../types';
 
 type TVideoListProps = {
@@ -18,6 +18,11 @@ const props = defineProps<TVideoListProps>();
 const videos = toRef(props.videos);
 
 const emit = defineEmits<TVideoListEmit>();
+
+watch(props.clients, () => {
+  console.log('fvfvfv', props.clients);
+} )
+
 
 function handleExpandVideo(event: Event) {
   try {

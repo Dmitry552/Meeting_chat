@@ -1,6 +1,12 @@
 import {TUserState} from "./modules/User/types";
-import {Action, ActionTree, GetterTree, ModuleTree, MutationTree, Plugin, StoreOptions} from "vuex";
+import {Action} from "vuex";
+import {TRoomState} from "./modules/Room/types";
+import {TAuthState} from "./modules/Auth";
 
-export type TRootState = TUserState;
+export type TRootState = {
+  user: TUserState,
+  room: TRoomState,
+  auth: TAuthState
+};
 
 export type TCustomAction<T> = Action<T, TRootState>

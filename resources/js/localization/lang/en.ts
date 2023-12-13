@@ -32,5 +32,14 @@ export default {
     passwordConfirm: 'Confirm password',
     'i accept': 'I accept the',
     terms: 'Terms and Conditions'
+  },
+  reset: {
+    'reset password': 'Password reset',
+    reset: 'Reset'
+  },
+  forgotPassword: {
+    'forgot password': 'Forgot your password?',
+    forgot: 'Send link',
+    description: 'We will send you a link to reset your password to this email address!'
   }
 };

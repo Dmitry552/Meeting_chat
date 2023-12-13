@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  const props = withDefaults(defineProps<{loading: boolean}>(), {loading: false});
+  const props = withDefaults(defineProps<{loading?: boolean}>(), {loading: false});
 </script>
 
 <template>

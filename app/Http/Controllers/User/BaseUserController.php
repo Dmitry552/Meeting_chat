@@ -13,7 +13,7 @@ abstract class BaseUserController extends Controller
         return 'user';
     }
 
-    public function getUser(): Authenticatable|null
+    public function getUser(): Authenticatable
     {
         return auth($this->currentGuard())->user();
     }

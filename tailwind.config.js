@@ -2,9 +2,9 @@
 
 export default {
   content: [
-    "./resources/**/*.js",
-    "./resources/**/*.ts",
-    "./resources/**/*.vue",
+    "./resources/index.html",
+    "./resources/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/primevue/**/*.{vue,js,ts,jsx,tsx}"
   ],
   darkMode: 'class',
   theme: {},

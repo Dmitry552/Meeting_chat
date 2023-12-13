@@ -2,8 +2,12 @@
 import {v4} from 'uuid';
 import {ref} from "vue";
 import {useRouter} from "vue-router";
+import {useStore} from "../store";
 
 const {push} = useRouter();
+const store = useStore();
+
+console.log(store.state);
 
 const roomID = ref<string>('');
 

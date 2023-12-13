@@ -7,16 +7,17 @@ import microphoneOff from '../../images/MeetingControl/microphoneOff.svg';
 import earphone from '../../images/MeetingControl/earphone.svg';
 import camcorderOn from '../../images/MeetingControl/camcorderOn.svg';
 import camcorderOff from '../../images/MeetingControl/camcorderOff.svg';
+import {TDevice} from "../types";
 
 type TMeetingControl = {
   showAudio: boolean,
   showVideo: boolean,
-  audioOutputDevices: MediaDeviceInfo[],
-  audioInputDevices: MediaDeviceInfo[],
-  videoInputDevices: MediaDeviceInfo[],
-  currentVideoInputDevices: MediaDeviceInfo,
-  currentAudioInputDevices: MediaDeviceInfo,
-  currentAudioOutputDevices: MediaDeviceInfo
+  audioOutputDevices: TDevice[],
+  audioInputDevices: TDevice[],
+  videoInputDevices: TDevice[],
+  currentVideoInputDevices: TDevice,
+  currentAudioInputDevices: TDevice,
+  currentAudioOutputDevices: TDevice
 }
 
 const showAudioInputDevices = ref<boolean>(false);
@@ -97,6 +98,7 @@ function handleChangeDevice(value: HTMLInputElement) {
         @changeDevice="handleChangeDevice"
       />
       <control-element
+        v-if="!!audioOutputDevices.length"
         deviceKind="audiooutput"
         :activePicture="earphone"
         :currentDevice="currentAudioOutputDevices"

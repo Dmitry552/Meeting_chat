@@ -2,7 +2,6 @@
 import {useRoute} from "vue-router";
 
 const route = useRoute();
-
 </script>
 
 <template>
@@ -10,5 +9,4 @@ const route = useRoute();
     <router-view/>
   </component>
 </template>
-
 

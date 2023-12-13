@@ -10,27 +10,25 @@ abstract class BaseUserTest extends TestCase
 {
     use UserAuthorizedTrait;
 
-    private function getUrlLogin(): string
-    {
-        return self::ROUTE_AUTH_LOGIN;
-    }
-
     /**
      * Auth user
      */
+    protected const ROUTE_USER_CREATE = 'api/registration';
     protected const ROUTE_AUTH_LOGIN = 'api/login';
     protected const ROUTE_AUTH_LOGOUT = 'api/user/logout';
     protected const ROUTE_AUTH_REFRESH = 'api/user/refresh';
     protected const ROUTE_AUTH_SHOW_ME = 'api/user/me';
+    protected const ROUTE_AUTH_FORGOT_PASSWORD = 'api/forgot-password';
 
     /**
      * User
      */
-    protected const ROUTE_USER_CREATE = 'api/create';
     protected const ROUTE_USER_INDEX = 'api/user/';
     protected const ROUTE_USER_SHOW = 'api/user/';
     protected const ROUTE_USER_UPDATE = 'api/user/';
     protected const ROUTE_USER_DESTROY = 'api/user/';
+    protected const ROUTE_USER_AVATAR = 'api/user/avatar/';
+    protected const ROUTE_USER_UPLOAD_PASSWORD = '/api/user/password/';
 
 
     /**
@@ -102,8 +100,16 @@ abstract class BaseUserTest extends TestCase
     {
         return [
             'id',
-            'name',
+            'firstName',
+            'lastName',
+            'gender',
+            'phone',
+            'currentAddress',
+            'permanantAddress',
+            'email',
+            'birthday',
             'email_verified',
+            'avatarPath',
             'created_at',
             'updated_at'
         ];

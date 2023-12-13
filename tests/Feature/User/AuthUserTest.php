@@ -6,9 +6,7 @@ use Tests\Feature\User\Traits\UserAuthorizedTrait;
 
 class AuthUserTest extends BaseUserTest
 {
-    use UserAuthorizedTrait;
-
-    private function getUrlLogin(): string
+    protected function getUrlLogin(): string
     {
         return parent::ROUTE_AUTH_LOGIN;
     }
@@ -18,7 +16,8 @@ class AuthUserTest extends BaseUserTest
         $response = $this->postJson(
             self::ROUTE_AUTH_LOGIN,
             [
-                'password' => '12345678'
+                'password' => '12345678',
+                'remember_me' => false
             ]
         );
 
@@ -35,7 +34,8 @@ class AuthUserTest extends BaseUserTest
             parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345gmail.com',
-                'password' => '12345678'
+                'password' => '12345678',
+                'remember_me' => false
             ]
         );
 
@@ -49,7 +49,8 @@ class AuthUserTest extends BaseUserTest
         $response = $this->postJson(
             self::ROUTE_AUTH_LOGIN,
             [
-                'email' => '12345g@mail.com'
+                'email' => '12345g@mail.com',
+                'remember_me' => false
             ]
         );
 
@@ -64,7 +65,8 @@ class AuthUserTest extends BaseUserTest
             parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345@gmail.com',
-                'password' => 'fgkljbnfgknb'
+                'password' => 'fgkljbnfgknb',
+                'remember_me' => false
             ]
         );
 
@@ -79,7 +81,8 @@ class AuthUserTest extends BaseUserTest
             parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '123fv45@gmail.com',
-                'password' => '234ergeerg'
+                'password' => '234ergeerg',
+                'remember_me' => false
             ]
         );
 
@@ -94,7 +97,8 @@ class AuthUserTest extends BaseUserTest
             parent::ROUTE_AUTH_LOGIN,
             [
                 'email' => '12345@gmail.com',
-                'password' => '12345678'
+                'password' => '12345678',
+                'remember_me' => false
             ]
         );
 
@@ -111,7 +115,7 @@ class AuthUserTest extends BaseUserTest
             ->assertJsonFragment(self::getLogoutFragment());
     }
 
-    public function test_user_refresh()
+    public function test_user_refresh_token()
     {
         $responseData = $this->authorizedUser();
 

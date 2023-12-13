@@ -32,5 +32,9 @@ export default {
     passwordConfirm: 'Підтвердьте пароль',
     'i accept': 'Я приймою',
     terms: 'Правила та умови'
+  },
+  reset: {
+    'reset password': 'Скидання пароля',
+    reset: 'Скинути'
   }
 }

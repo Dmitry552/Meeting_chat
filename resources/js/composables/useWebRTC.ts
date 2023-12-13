@@ -2,7 +2,8 @@ import {ref, watch, onUpdated, onBeforeUnmount} from "vue";
 import ACTIONS from "../socket/actions";
 import freeice from "freeice";
 import useSocket from "./useSocket";
-import {Clients, Client} from "../types";
+import {Clients, Client, TDevice} from "../types";
+import {getFilteredDevices} from "../utils/helpers";
 
 export const LOCAL_VIDEO: string = 'LOCAL_VIDEO';
 
@@ -38,30 +39,31 @@ console.log('useWebRTC');
   const showAudio = ref<boolean>(true);
   const showScreenBroadcast = ref<boolean>(false);
 
-  const videoInputDevices = ref<MediaDeviceInfo[]>([]);
-  const audioInputDevices = ref<MediaDeviceInfo[]>([]);
-  const audioOutputDevices = ref<MediaDeviceInfo[]>([]);
+  const videoInputDevices = ref<TDevice[]>([]);
+  const audioInputDevices = ref<TDevice[]>([]);
+  const audioOutputDevices = ref<TDevice[]>([]);
 
-  const currentVideoInputDevices = ref<MediaDeviceInfo>();
-  const currentAudioInputDevices = ref<MediaDeviceInfo>();
-  const currentAudioOutputDevices = ref<MediaDeviceInfo>();
+  const currentVideoInputDevices = ref<TDevice>();
+  const currentAudioInputDevices = ref<TDevice>();
+  const currentAudioOutputDevices = ref<TDevice>();
 
   const addNewClient = (newClient: string): Client | undefined => {
     const client: Client = {
       name: newClient,
       control: {
         showAudio: true,
-        showVideo: false
+        showVideo: true
       }
     }
 
-    if (!clients.value.find((value: Client): boolean => value?.name === LOCAL_VIDEO)) {
+    if (!clients.value.find((value: Client): boolean => value?.name === newClient)) {
+      console.log('fff');
       clients.value.push(client);
       return client;
     }
   }
 
-  const startCapture = async ():  Promise<void> => {
+  const startCapture = async (): Promise<void> => {
     await getDevises();
 
     navigator.mediaDevices.ondevicechange = async (): Promise<void> => {
@@ -69,78 +71,110 @@ console.log('useWebRTC');
     }
 
     await setLocalMediaStream();
+
     const client = addNewClient(LOCAL_VIDEO);
-    client!.control.showVideo = true;
   }
 
-  const setLocalMediaStream = async (): Promise<void> => {
-    localMediaStream.value = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        deviceId: currentAudioInputDevices.value!.deviceId
-      },
-      video: {
-        deviceId: currentVideoInputDevices.value!.deviceId
-      }
-    });
+  const setLocalMediaStream = async (value?: 'audio'): Promise<void> => {
+    if (value) {
+      localMediaStream.value = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: currentAudioInputDevices.value!.deviceId
+        },
+      });
+    } else {
+      localMediaStream.value = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: currentAudioInputDevices.value!.deviceId
+        },
+        video: {
+          deviceId: currentVideoInputDevices.value!.deviceId
+        }
+      });
+    }
+
     localMediaStream.value!.getAudioTracks()[0].enabled = showAudio.value;
   }
 
+  const changingMediaStreamForPeers = (value?: 'audio' | 'video') => {
+    for (let key in peerConnections.value) {
+      const tracks: MediaStreamTrack[] = localMediaStream.value!.getTracks();
+      const senders: RTCRtpSender[] = peerConnections.value[key].getSenders();
+
+      senders.forEach((sender: RTCRtpSender): void => {
+        peerConnections.value[key].removeTrack(sender!);
+      })
+
+      tracks.forEach((track: MediaStreamTrack): void => {
+        if (track.kind === 'video') {
+          track.enabled = showVideo.value
+        } else if (track.kind === 'audio') {
+          track.enabled = showVideo.value
+        }
+
+        peerConnections.value[key].addTrack(
+          track,
+          (localMediaStream.value as MediaStream)
+        );
+      })
+    }
+  }
+
   const getDevises = async (): Promise<void> => {
-    const devices: MediaDeviceInfo[] = await navigator.mediaDevices.enumerateDevices();
+    try {
+      const devices: MediaDeviceInfo[] = await navigator.mediaDevices.enumerateDevices();
 
-    videoInputDevices.value = devices.filter((device: MediaDeviceInfo): boolean => device.kind === 'videoinput');
-    audioOutputDevices.value = devices.filter((device: MediaDeviceInfo): boolean => device.kind === 'audiooutput');
-    audioInputDevices.value = devices.filter((device: MediaDeviceInfo): boolean => device.kind === 'audioinput');
-    if (
-      !currentVideoInputDevices.value || !videoInputDevices.value.find(
-        (devise: MediaDeviceInfo): boolean => devise.deviceId === currentVideoInputDevices.value?.deviceId
-      )
-    ) {
-      currentVideoInputDevices.value = videoInputDevices.value[0];
-    }
+      videoInputDevices.value = getFilteredDevices(devices, 'videoinput');
+      audioOutputDevices.value = getFilteredDevices(devices, 'audiooutput');
+      audioInputDevices.value = getFilteredDevices(devices, 'audioinput');
 
-    if (
-      !currentAudioInputDevices.value || !audioInputDevices.value.find(
-        (devise: MediaDeviceInfo): boolean => devise.deviceId === currentAudioInputDevices.value?.deviceId
-      )
-    ) {
-      currentAudioInputDevices.value = audioInputDevices.value.find(
-        (device: MediaDeviceInfo): boolean => device.deviceId === 'default'
-      );
-    }
+      if (
+        !currentVideoInputDevices.value || !videoInputDevices.value.find(
+          (devise: TDevice): boolean => devise.deviceId === currentVideoInputDevices.value?.deviceId
+        )
+      ) {
+        currentVideoInputDevices.value = videoInputDevices.value[0];
+      }
 
-    if (
-      !currentAudioOutputDevices.value || !audioOutputDevices.value.find(
-        (device: MediaDeviceInfo): boolean => device.deviceId === currentAudioOutputDevices.value?.deviceId
-      )
-    ) {
-      currentAudioOutputDevices.value = audioOutputDevices.value.find(
-        (device: MediaDeviceInfo): boolean => device.deviceId === 'default'
-      );
+      if (
+        !currentAudioInputDevices.value || !audioInputDevices.value.find(
+          (devise: TDevice): boolean => devise.deviceId === currentAudioInputDevices.value?.deviceId
+        )
+      ) {
+        currentAudioInputDevices.value = audioInputDevices.value[0];
+      }
+
+      if (
+        !currentAudioOutputDevices.value || !audioOutputDevices.value.find(
+          (device: TDevice): boolean => device.deviceId === currentAudioOutputDevices.value?.deviceId
+        )
+      ) {
+        currentAudioOutputDevices.value = audioOutputDevices.value[0];
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
 
   const setDevices = async (option: {id: string, name: string}): Promise<void> => {
     if (option.name === 'audioinput') {
       currentAudioInputDevices.value = audioInputDevices.value.find(
-        (device: MediaDeviceInfo): boolean => device.deviceId === option.id
+        (device: TDevice): boolean => device.deviceId === option.id
       );
 
       await setLocalMediaStream();
       peerMediaElements.value[LOCAL_VIDEO].srcObject = localMediaStream.value;
     } else if (option.name === 'videoinput') {
       currentVideoInputDevices.value = videoInputDevices.value.find(
-        (device: MediaDeviceInfo): boolean => device.deviceId === option.id
+        (device: TDevice): boolean => device.deviceId === option.id
       );
 
       await setLocalMediaStream();
       peerMediaElements.value[LOCAL_VIDEO].srcObject = localMediaStream.value;
     } else if (option.name === 'videooutput') {
       currentAudioOutputDevices.value = audioOutputDevices.value.find(
-        (device: MediaDeviceInfo): boolean => device.deviceId === option.id
+        (device: TDevice): boolean => device.deviceId === option.id
       );
-
-      //await peerMediaElements.value[LOCAL_VIDEO].setSinkId(option.id);
     }
   }
 
@@ -153,6 +187,7 @@ console.log('useWebRTC');
       sessionDescription: RTCSessionDescriptionInit
     }
   ): Promise<void> => {
+    console.log('setRemoteMedia', remoteDescription)
     await peerConnections.value[peerID].setRemoteDescription(
       new RTCSessionDescription(remoteDescription)
     );
@@ -176,6 +211,7 @@ console.log('useWebRTC');
       createOffer: boolean
     }
   ): Promise<void> => {
+    console.log(peerID, createOffer);
     if (peerID in peerConnections.value) {
       console.warn(`Already connected to peer ${peerID}`)
     }
@@ -193,29 +229,42 @@ console.log('useWebRTC');
       }
     }
 
-    // let tracksNumber = 0; //two tracks, video + audio
-    // peerConnections.value[peerID].ontrack = ({streams: [remoteStream]}) => {
-    //   tracksNumber++;
-    //   if (tracksNumber === 2) {
-    //     addNewClient(peerID);
-    //     clientsMediaStream.value[peerID] = remoteStream;
-    //   }
-    // }
-
     peerConnections.value[peerID].ontrack = (event: RTCTrackEvent): void => {
-      console.log('event', event)
-      const client = addNewClient(peerID);
+
+      addNewClient(peerID);
+
       clientsMediaStream.value[(peerID as string)] = event.streams[0];
-      client!.control.showVideo = true;
+      console.log('event', peerMediaElements.value[(peerID as string)])
+      // if (peerMediaElements.value[(peerID as string)]) {
+      //   peerMediaElements.value[(peerID as string)].srcObject = event.streams[0];
+      // }
     }
 
     localMediaStream.value?.getTracks().forEach((track: MediaStreamTrack): void => {
       peerConnections.value[peerID].addTrack(track, localMediaStream.value as MediaStream)
     })
 
+    // let countNegotiationneeded: boolean = false;
+    // peerConnections.value[peerID].onnegotiationneeded = async (event) => {
+    //   console.log('negotiationneeded', createOffer, countNegotiationneeded);
+    //
+    //   if (countNegotiationneeded) {
+    //     const offer: RTCSessionDescriptionInit = await peerConnections.value[peerID].createOffer();
+    //     await peerConnections.value[peerID].setLocalDescription(offer);
+    //     action(ACTIONS.RELAY_SDP, {
+    //       room: peerID,
+    //       sessionDescription: offer
+    //     });
+    //   }
+    //   countNegotiationneeded = true;
+    // }
+
     if (createOffer) {
+      // countNegotiationneeded = false;
+
       const offer: RTCSessionDescriptionInit = await peerConnections.value[peerID].createOffer();
       await peerConnections.value[peerID].setLocalDescription(offer);
+      console.log('createOffer', offer)
       action(ACTIONS.RELAY_SDP, {
         room: peerID,
         sessionDescription: offer
@@ -229,13 +278,38 @@ console.log('useWebRTC');
     if (showVideo.value) {
       showVideo.value = false;
       (client as Client)!.control.showVideo = false;
-      localMediaStream.value!.getVideoTracks()[0].stop();
+      await setLocalMediaStream('audio');
+      action(ACTIONS.MUTE, {room: roomID.value, value: false, key: 'video'})
+
     } else {
       await setLocalMediaStream();
       peerMediaElements.value['LOCAL_VIDEO'].srcObject = localMediaStream.value;
       showVideo.value = true;
       (client as Client)!.control.showVideo = true;
+      action(ACTIONS.MUTE, {room: roomID.value, value: true, key: 'video'})
     }
+
+    //changingMediaStreamForPeers();
+  }
+
+  const handleMutedVideoClient = async (
+    {
+      peerID,
+      track
+    }: {
+      peerID: string,
+      track: MediaStreamTrack
+    }
+  ): Promise<void> => {
+    const client: Client | undefined = clients.value.find((value: Client): boolean => value?.name === peerID);
+
+    // if (peerConnections.value[peerID]) {
+    //   peerConnections.value[peerID].close();
+    // }
+
+    console.log(peerConnections.value[peerID])
+
+    console.log('handleMutedVideoClient', peerID, track);
   }
 
   const handleMuteAudio = (): void => {
@@ -244,44 +318,64 @@ console.log('useWebRTC');
     if (showAudio.value) {
       showAudio.value = false;
 
-      if (client) {
-        (client as Client)!.control.showAudio = false;
-      }
+      (client as Client)!.control.showAudio = false;
 
       localMediaStream.value!.getAudioTracks()[0].enabled = false;
+
+      action(ACTIONS.MUTE, {room: roomID.value, value: false, key: 'audio'})
     } else {
       showAudio.value = true;
 
-      if (client) {
-        (client as Client)!.control.showAudio = true;
-      }
+      (client as Client)!.control.showAudio = true;
 
       localMediaStream.value!.getAudioTracks()[0].enabled = true;
+
+      action(ACTIONS.MUTE, {room: roomID.value, value: true, key: 'audio'})
     }
+  }
+
+  const handleMutedClient = (
+    {
+      peerID,
+      value,
+      key
+    }: {
+      peerID: string,
+      value: boolean,
+      key: 'audio' | 'video'
+    }): void => {
+    const client: Client | undefined = clients.value.find((value: Client): boolean => value?.name === peerID);
+
+    if (key === 'audio') {
+      (client as Client)!.control.showAudio = value;
+      clientsMediaStream.value[peerID].getAudioTracks()[0].enabled = value;
+    } else {
+      (client as Client)!.control.showVideo = value;
+      clientsMediaStream.value[peerID].getVideoTracks()[0].enabled = value;
+    }
+    console.log(client);
   }
 
   const handleScreenBroadcast = async (): Promise<void> => {
     const client: Client | undefined = clients.value.find((value: Client): boolean => value?.name === LOCAL_VIDEO);
 
     if (!showScreenBroadcast.value) {
-      console.log('fvdfvdfvdfv');
       showScreenBroadcast.value = true;
       (client as Client)!.control.showVideo = false;
-      try {
-        localMediaStream.value = await navigator.mediaDevices.getDisplayMedia({video: true, audio: true});
-        peerMediaElements.value['LOCAL_VIDEO'].srcObject = localMediaStream.value;
-        (client as Client)!.control.showVideo = true;
-      } catch (e) {
-        console.log(e);
-      }
+
+      localMediaStream.value = await navigator.mediaDevices.getDisplayMedia({video: true, audio: true});
+      peerMediaElements.value['LOCAL_VIDEO'].srcObject = localMediaStream.value;
+      (client as Client)!.control.showVideo = true;
     } else {
       (client as Client)!.control.showVideo = false;
-      localMediaStream.value!.getTracks().forEach(track => track.stop());
+      localMediaStream.value!.getTracks().forEach((track: MediaStreamTrack): void => track.stop());
       await setLocalMediaStream();
       peerMediaElements.value['LOCAL_VIDEO'].srcObject = localMediaStream.value;
       (client as Client)!.control.showVideo = true;
       showScreenBroadcast.value = false;
     }
+
+    changingMediaStreamForPeers();
   }
 
   const handleHungUp = (): void => {
@@ -311,7 +405,7 @@ console.log('useWebRTC');
     videos.value.forEach((video: HTMLVideoElement, index: number): void => {
       peerMediaElements.value[`${clients.value[index]!.name}`] = video;
       if (clients.value[index]!.name === LOCAL_VIDEO && !peerMediaElements.value[LOCAL_VIDEO].srcObject) {
-        peerMediaElements.value[LOCAL_VIDEO].volume = 1;
+        peerMediaElements.value[LOCAL_VIDEO].volume = 0;
         peerMediaElements.value[LOCAL_VIDEO].srcObject = localMediaStream.value;
         return;
       }
@@ -346,7 +440,8 @@ console.log('useWebRTC');
   listen(ACTIONS.SESSION_DESCRIPTION, setRemoteMedia);
   listen(ACTIONS.ICE_CANDIDATE, handleNewCandidate);
   listen(ACTIONS.REMOVE_PEER, handleRemovePeer);
-  // listen(ACTIONS.MUTED_VIDEO_STREAM, handleMutedVideo)
+  listen(ACTIONS.MUTED, handleMutedClient)
+  //listen(ACTIONS.MUTED_VIDEO_STREAM, handleMutedVideoClient)
 
   return {
     videos,
@@ -363,6 +458,7 @@ console.log('useWebRTC');
     currentAudioInputDevices,
     currentAudioOutputDevices,
     startCapture,
+    addNewClient,
     handleMuteVideo,
     handleMuteAudio,
     handleScreenBroadcast,
