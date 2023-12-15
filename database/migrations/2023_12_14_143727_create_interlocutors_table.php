@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('room_user', function (Blueprint $table) {
+        Schema::create('interlocutors', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("user_id");
-            $table->unsignedBigInteger("room_id");
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('room_id');
+            $table->string('interlocutorName');
             $table->timestamps();
 
-            $table->foreign("user_id")->references("id")->on('users');
-            $table->foreign("room_id")->references("id")->on('rooms');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('room_id')->references('id')->on('rooms');
         });
     }
 
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('room_user');
+        Schema::dropIfExists('interlocutors');
     }
 };

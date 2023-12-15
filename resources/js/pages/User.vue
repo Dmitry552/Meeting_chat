@@ -44,6 +44,12 @@ const handleClose = () => {
   editingProfile.value = false;
   editingPassword.value = false;
 }
+
+window.Echo.channel('chat')
+  .listen('.message.created', (data: {message: string}) => {
+    console.log(data);
+  })
+console.log(window.location.hostname)
 </script>
 
 <template>

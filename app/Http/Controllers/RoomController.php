@@ -38,9 +38,7 @@ class RoomController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        app()->setLocale('ru');
-
-        return response()->json(['message' => 'Hello'])->cookie('token', 'sdcsdcsdcsdcsdcsdcsdcsdc', 60, null, null, false, false);
+        return response()->json();
     }
 
     /**
