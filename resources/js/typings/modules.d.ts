@@ -8,3 +8,11 @@ declare module '*.svg' {
 }
 
 declare module '*.vue';
+
+export {};
+
+declare global {
+  export interface Window {
+    Echo: any;
+  }
+}

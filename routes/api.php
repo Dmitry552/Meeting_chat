@@ -4,9 +4,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\User\AuthUserController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,3 +50,11 @@ Route::middleware([
         Route::delete('avatar', [UserController::class, 'destroyAvatar']); //TODO: add to swagger
         Route::delete('/{user}', [UserController::class, 'destroy']);
 });
+
+Route::middleware([
+    'interlocutor:user',
+])
+    ->prefix('videoChat')
+    ->group(function () {
+        require __DIR__ ."/channels/videoChat/videoChat.php";
+    });
