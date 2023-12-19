@@ -33,7 +33,5 @@ class Interlocutor extends Authenticate
                 return;
             }
         }
-
-        dump('Hello world');
     }
 }

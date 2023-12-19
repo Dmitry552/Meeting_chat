@@ -14,6 +14,23 @@ export type User = {
   updated_at: string
 };
 
+export type Interlocutor = {
+  id: number,
+  interlocutorName: string,
+  user: User
+  created_at: string,
+  updated_at: string
+}
+
+export type Room = {
+  id: number,
+  name: string,
+  creator: number,
+  interlocutors: Interlocutor[]
+  created_at: string,
+  updated_at: string
+}
+
 export type ControlStream = {
   showAudio: boolean,
   showVideo: boolean,

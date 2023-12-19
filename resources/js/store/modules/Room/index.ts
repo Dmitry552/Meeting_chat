@@ -2,11 +2,19 @@ import mutations from "./mutations";
 import * as actions from './actions';
 import * as getters from './getters';
 import {Module} from "vuex";
-import {TRoomState} from "./types";
 import {TRootState} from "../../types";
+import {Interlocutor, Room} from "../../../types";
 
-const state = {
+export type TRoomState = {
+  room: Room | null,
+  currentInterlocutor: Interlocutor | null,
+  interlocutors: Interlocutor[] | null
+}
 
+const state: TRoomState = {
+  room: null,
+  currentInterlocutor: null,
+  interlocutors: null
 }
 
 const RoomModule: Module<TRoomState, TRootState> = {

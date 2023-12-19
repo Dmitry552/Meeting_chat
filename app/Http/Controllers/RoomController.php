@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\User\UserRepository;
-use App\Http\Services\UserService;
+use App\Http\Requests\Room\RoomCreateRequest;
+use App\Http\Services\RoomService;
+use App\Models\Interlocutor;
 use App\Models\Room;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Http\Response;
 
 class RoomController extends Controller
 {
-    private UserService $service;
-    private UserRepository $userRepository;
+    private RoomService $service;
 
-    public function __construct(UserService $service, UserRepository $userRepository)
+    public function __construct(RoomService $service)
     {
         $this->service = $service;
-        $this->userRepository = $userRepository;
     }
     /**
      * Display a listing of the resource.
@@ -32,52 +29,43 @@ class RoomController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param RoomCreateRequest $request
+     * @param Interlocutor $interlocutor
+     * @return Response
      */
-    public function create(Request $request): JsonResponse
+    public function store(RoomCreateRequest $request, Interlocutor $interlocutor): Response
     {
-        return response()->json();
+        $this->service->create($request->all(), $interlocutor);
+
+        return response()->noContent();
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param string $name
+     * @return Response
      */
-    public function store(Request $request)
+    public function check(string $name): Response
     {
-        //
+        return response($this->service->check($name));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
+     * @param  Room  $room
+     * @return JsonResponse
      */
-    public function show(Room $room)
+    public function show(Room $room): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Room $room)
-    {
-        //
+        return response()->json($this->service->show($room));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */

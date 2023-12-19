@@ -1,6 +1,6 @@
-import {TUserState} from "./modules/User/types";
+import {TUserState} from "./modules/User";
 import {Action} from "vuex";
-import {TRoomState} from "./modules/Room/types";
+import {TRoomState} from "./modules/Room";
 import {TAuthState} from "./modules/Auth";
 
 export type TRootState = {

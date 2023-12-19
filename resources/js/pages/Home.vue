@@ -1,24 +1,88 @@
 <script lang="ts" setup>
 import {v4} from 'uuid';
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "../store";
+import swal from "sweetalert";
+import {errorHandler, isValidUrl} from "../utils/helpers";
+
+type TRoomData = {
+  name: string
+}
+
+type TInterlocutorData = {
+  userName?: string
+}
 
 const {push} = useRouter();
+const {t} = useI18n();
 const store = useStore();
 
-console.log(store.state);
+const roomLinks = ref<string>('');
 
-const roomID = ref<string>('');
+const authUser = computed(() => store.getters.getAuthUser);
+const joinRoom = (data: TRoomData) => store.dispatch('joinRoom', data);
+const createInterlocutor = (data: TInterlocutorData) => store.dispatch('createInterlocutor', data);
 
-function handleCreateNewRoom(): void {
-  const roomID = v4();
-  push(`/room/${roomID}`);
+async function handleCreateNewRoom(): void {
+  let stop: boolean = false;
+  const dataInterlocutor: TInterlocutorData = {};
+
+  if (!authUser.value) {
+    const result = await swal( {
+      content: "input",
+      title: "Ops!",
+      text: t("errors.home['missing userName']"),
+      icon: "warning",
+    })
+
+    if (result) {
+      dataInterlocutor.userName = result;
+    } else {
+      stop = await swal({
+        title: "Ops!",
+        text: 'Данные необходимо ввести!',
+        icon: "warning",
+      });
+    }
+  }
+
+  if (!stop) {
+    await createNewRoom(dataInterlocutor);
+    //push(`/room/${roomID}`);
+  }
 }
 
 function handleEnterAnRoom(): void {
-  //TODO: Добавить проверку на существование id комнаты
-  push(`/room/${roomID.value}`);
+  isValidUrl(roomLinks.value)
+  if (true) {
+    if (roomLinks.value.startsWith(`${import.meta.env.VITE_APP_URL}/room/`)) {
+      const url = new URL(roomLinks.value);
+
+      console.log(url.pathname);
+      //push(url.pathname);
+    } else {
+      swal( {
+        title: "Ops!",
+        text: t("errors.home.url"),
+        icon: "warning",
+      });
+    }
+  } else {
+    console.log('ffff');
+    //push(`/room/${roomLinks.value}`);
+  }
+}
+
+async function createNewRoom(data): void {
+  const roomID = v4();
+  try {
+    await createInterlocutor(data);
+    await joinRoom({name: roomID})
+  } catch (err) {
+    errorHandler(err.response)
+  }
 }
 </script>
 
@@ -63,7 +127,7 @@ function handleEnterAnRoom(): void {
           type="text"
           id="small-input"
           :placeholder="$t('home[\'id room\']')"
-          v-model="roomID"
+          v-model="roomLinks"
           class="pl-10 block w-full text-gray-900 border border-gray-500 rounded-md shadow-lg cursor-text
             focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400
             dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-gray-500

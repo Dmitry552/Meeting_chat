@@ -1,3 +1,5 @@
+import {TRoomState} from "./index";
 
 
-export const room = (state: any) => state
+export const getRoom = (state: TRoomState) => state.room;
+export const getCurrentInterlocutor = (state: TRoomState) => state.currentInterlocutor;

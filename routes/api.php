@@ -4,9 +4,8 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\User\AuthUserController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\InterlocutorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +33,17 @@ Route::post('/reset-password', [AuthUserController::class, 'resetPassword'])
     ->middleware('guest:user')
     ->name('password.update');
 
-Route::post('/room', [RoomController::class, 'create']);
+Route::middleware([
+    'interlocutor:user'
+])
+    ->prefix('interlocutor')
+    ->group(function () {
+   Route::post('/', [InterlocutorController::class, 'store']);
+});
+
+Route::post('/room/{interlocutor}', [RoomController::class, 'store']);
+Route::get('/room/{room:name}', [RoomController::class, 'show']);
+Route::get('/room/check/{name}', [RoomController::class, 'check']);
 
 Route::middleware([
     'auth:user',

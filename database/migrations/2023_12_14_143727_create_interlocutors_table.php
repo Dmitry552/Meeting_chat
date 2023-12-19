@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('interlocutors', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('room_id')->nullable();
             $table->string('interlocutorName');
             $table->timestamps();
 
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('room_id')->references('id')->on('rooms');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('room_id')->references('id')->on('rooms');
         });
     }
 
