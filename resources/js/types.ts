@@ -26,7 +26,6 @@ export type Room = {
   id: number,
   name: string,
   creator: number,
-  interlocutors: Interlocutor[]
   created_at: string,
   updated_at: string
 }

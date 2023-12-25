@@ -1,14 +1,8 @@
-import {Client, NoReadonly, TDevice} from "../types";
+import {TDevice} from "../types";
 import swal from "sweetalert";
 
 type TDeviceKind = {
   [key: string]: string
-}
-
-export type TCountryCallingCodes = {
-  name: string,
-  code: string,
-  codeNumber: string
 }
 
 const DeviceKind: TDeviceKind = {
@@ -70,9 +64,8 @@ export function getFilteredDevices(array: MediaDeviceInfo[], filter: string): TD
   return newArray;
 }
 
-export function isValidUrl(url: string): boolean
-{
-  const objRE = /^(?:(?:https?):\/\/(?:[a-z0-9_-]{1,32}(?::[a-z0-9_-]{1,32})?@)?)?(?:(?:[a-z0-9-]{1,128}\.)+(?:com|net|org|mil|edu|arpa|ru|gov|biz|info|aero|inc|name|[a-z]{2})|(?!0)(?:(?!0[^.]|255)[0-9]{1,3}\.){3}(?!0|255)[0-9]{1,3})(?:\/[a-z0-9.,_@%&?+=\~\/-]*)?(?:#[^ \'\"&<>]*)?$/i;
+export function isValidUrl(url: string): boolean {
+  const objRE = /^https?:\/\//
 
   return objRE.test(url);
 }

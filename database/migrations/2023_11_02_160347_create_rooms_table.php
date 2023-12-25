@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->unsignedBigInteger('creator');
             $table->timestamps();
+
+            $table->dropSoftDeletes();
         });
     }
 

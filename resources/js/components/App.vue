@@ -6,7 +6,9 @@ const route = useRoute();
 
 <template>
   <component :is="route.meta.layout">
-    <router-view/>
+    <Suspense>
+      <router-view/>
+    </Suspense>
   </component>
 </template>
 

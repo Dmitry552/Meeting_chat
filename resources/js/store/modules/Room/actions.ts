@@ -4,14 +4,23 @@ import {$authHttp, $http} from "../../../utils/http";
 import * as types from './mutationsRoomTypes';
 
 
-export const joinRoom: TCustomAction<TRoomState> = ({commit, getters}, payload): Promise<void> => {
+export const createRoom: TCustomAction<TRoomState> = ({commit, getters}, payload): Promise<void> => {
   return new Promise((resolve, reject) => {
     const creator = getters.getCurrentInterlocutor;
 
     $http.post(`/api/room/${creator.id}`, payload)
-      .then(({data}) => {
-        console.log('room', data);
-        commit(types.GET_ROOM, data);
+      .then(() => {
+        resolve();
+      }).catch(err => {
+      reject(err);
+    });
+  })
+}
+
+export const joinRoom: TCustomAction<TRoomState> = ({commit, getters}, payload): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    $http.get(`/api/room/join/${payload.roomId}/${payload.interlocutor}`)
+      .then(() => {
         resolve();
       }).catch(err => {
       reject(err);
@@ -41,11 +50,11 @@ export const createInterlocutor: TCustomAction<TRoomState> = ({commit}, payload)
   });
 }
 
-export const checkRoom: TCustomAction<TRoomState> = ({commit}, payload): Promise<void> => {
+export const checkRoom: TCustomAction<TRoomState> = ({commit}, payload): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     $http.get(`/api/room/check/${payload}`)
-      .then(() => {
-        resolve();
+      .then(({data}) => {
+        resolve(Boolean(data));
       }).catch(() => {
       reject();
     })
@@ -54,9 +63,21 @@ export const checkRoom: TCustomAction<TRoomState> = ({commit}, payload): Promise
 
 export const getRoom: TCustomAction<TRoomState> = ({commit}, payload): Promise<void> => {
   return new Promise((resolve, reject) => {
-    $http.post(`/api/room/${payload}`)
+    $http.get(`/api/room/${payload}`)
       .then(({data}) => {
-        console.log('getRoom', data);
+        commit(types.GET_ROOM, data);
+        resolve(data);
+      }).catch(() => {
+      reject();
+    })
+  });
+}
+
+export const getInterlocutorsRoom: TCustomAction<TRoomState> = ({commit}, payload): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    $http.get(`/api/room/interlocutors/${payload}`)
+      .then(({data}) => {
+        commit(types.GET_INTERLOCUTORS, data);
         resolve();
       }).catch(() => {
       reject();

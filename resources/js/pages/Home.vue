@@ -4,8 +4,8 @@ import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "../store";
-import swal from "sweetalert";
-import {errorHandler, isValidUrl} from "../utils/helpers";
+import {errorHandler} from "../utils/helpers";
+import useRoomValidation from "../composables/useRoomValidation";
 
 type TRoomData = {
   name: string
@@ -18,70 +18,44 @@ type TInterlocutorData = {
 const {push} = useRouter();
 const {t} = useI18n();
 const store = useStore();
+const {checkingRoomLink, checkUserName} = useRoomValidation();
 
 const roomLinks = ref<string>('');
 
 const authUser = computed(() => store.getters.getAuthUser);
-const joinRoom = (data: TRoomData) => store.dispatch('joinRoom', data);
+const createRoom = (data: TRoomData) => store.dispatch('createRoom', data);
 const createInterlocutor = (data: TInterlocutorData) => store.dispatch('createInterlocutor', data);
 
-async function handleCreateNewRoom(): void {
-  let stop: boolean = false;
-  const dataInterlocutor: TInterlocutorData = {};
+async function handleCreateNewRoom(): Promise<void> {
+  const {userName, stopIndicator} = await checkUserName(authUser.value);
+  const dataInterlocutor: TInterlocutorData = userName ? {userName} : {};
 
-  if (!authUser.value) {
-    const result = await swal( {
-      content: "input",
-      title: "Ops!",
-      text: t("errors.home['missing userName']"),
-      icon: "warning",
-    })
-
-    if (result) {
-      dataInterlocutor.userName = result;
-    } else {
-      stop = await swal({
-        title: "Ops!",
-        text: 'Данные необходимо ввести!',
-        icon: "warning",
-      });
+  if (!stopIndicator) {
+    const roomID = v4();
+    try {
+      await createInterlocutor(dataInterlocutor);
+      await createRoom({name: roomID});
+      push(`/room/${roomID}`);
+    } catch (err) {
+      errorHandler(err.response)
     }
-  }
-
-  if (!stop) {
-    await createNewRoom(dataInterlocutor);
-    //push(`/room/${roomID}`);
   }
 }
 
-function handleEnterAnRoom(): void {
-  isValidUrl(roomLinks.value)
-  if (true) {
-    if (roomLinks.value.startsWith(`${import.meta.env.VITE_APP_URL}/room/`)) {
-      const url = new URL(roomLinks.value);
+async function handleEnterAnRoom(): Promise<void> {
+  const path = await checkingRoomLink();
+  if (!path) return;
+  const {userName, stopIndicator} = await checkUserName(authUser.value);
 
-      console.log(url.pathname);
-      //push(url.pathname);
-    } else {
-      swal( {
-        title: "Ops!",
-        text: t("errors.home.url"),
-        icon: "warning",
-      });
+  const dataInterlocutor: TInterlocutorData = userName ? {userName} : {};
+
+  if (path && !stopIndicator) {
+    try {
+      await createInterlocutor(dataInterlocutor);
+      push(path);
+    } catch (err) {
+      errorHandler(err.response)
     }
-  } else {
-    console.log('ffff');
-    //push(`/room/${roomLinks.value}`);
-  }
-}
-
-async function createNewRoom(data): void {
-  const roomID = v4();
-  try {
-    await createInterlocutor(data);
-    await joinRoom({name: roomID})
-  } catch (err) {
-    errorHandler(err.response)
   }
 }
 </script>

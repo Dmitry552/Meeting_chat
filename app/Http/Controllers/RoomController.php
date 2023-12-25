@@ -63,6 +63,20 @@ class RoomController extends Controller
     }
 
     /**
+     * Join the room
+     *
+     * @param Room $room
+     * @param Interlocutor $interlocutor
+     * @return Response
+     */
+    public function joinRoom(Room $room, Interlocutor $interlocutor): Response
+    {
+        $this->service->joinRoom($room, $interlocutor);
+
+        return response()->noContent();
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param Request $request

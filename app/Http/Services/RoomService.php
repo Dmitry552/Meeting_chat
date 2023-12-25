@@ -39,4 +39,9 @@ class RoomService
     {
         return $this->repository->checkRoom($name);
     }
+
+    public function joinRoom(Room $room, Interlocutor $interlocutor): RoomResource
+    {
+        return new RoomResource($this->repository->join($room, $interlocutor));
+    }
 }

@@ -8,7 +8,9 @@ export default {
     },
     home: {
       'missing userName': 'Your are not logged in. Enter user name to start chatting!',
-      url: 'This is the wrong URL!'
+      url: 'This is the wrong URL!',
+      param: 'There is no room number in the link!',
+      noUserName: 'Username required!'
     }
   },
   home: {

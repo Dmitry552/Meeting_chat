@@ -19,7 +19,6 @@ class RoomResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'creator' => $this->creator,
-            'interlocutors' => InterlocutorResource::collection($this->interlocutors),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

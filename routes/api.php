@@ -44,6 +44,8 @@ Route::middleware([
 Route::post('/room/{interlocutor}', [RoomController::class, 'store']);
 Route::get('/room/{room:name}', [RoomController::class, 'show']);
 Route::get('/room/check/{name}', [RoomController::class, 'check']);
+Route::get('/room/interlocutors/{room:name}', [InterlocutorController::class, 'interlocutorsRoom']);
+Route::get('/room/join/{room:name}/{interlocutor}', [RoomController::class, 'joinRoom']);
 
 Route::middleware([
     'auth:user',
