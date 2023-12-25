@@ -10,7 +10,8 @@ export const key: InjectionKey<Store<TRootState>> = Symbol()
 export const store: Store<TRootState> = createStore<TRootState>({
   modules: {
     user: UserModule,
-    auth: AuthModule
+    auth: AuthModule,
+    room: RoomModule
   }
 });
 

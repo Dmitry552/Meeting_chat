@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Room extends Model
 {
@@ -16,14 +16,15 @@ class Room extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name'
+        'name',
+        'creator'
     ];
 
     /**
-     * @return BelongsToMany
+     * @return HasMany
      */
-    public function users(): BelongsToMany
+    public function interlocutors(): HasMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(Interlocutor::class);
     }
 }

@@ -5,6 +5,12 @@ export default {
       email: 'Must be a valid email!',
       min: '{value} must be at least {number} characters!',
       oneOf: 'Passwords must be the same!'
+    },
+    home: {
+      'missing userName': 'Your are not logged in. Enter user name to start chatting!',
+      url: 'This is the wrong URL!',
+      param: 'There is no room number in the link!',
+      noUserName: 'Username required!'
     }
   },
   home: {

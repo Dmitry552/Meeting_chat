@@ -1,24 +1,62 @@
 <script lang="ts" setup>
 import {v4} from 'uuid';
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "../store";
+import {errorHandler} from "../utils/helpers";
+import useRoomValidation from "../composables/useRoomValidation";
 
-const {push} = useRouter();
-const store = useStore();
-
-console.log(store.state);
-
-const roomID = ref<string>('');
-
-function handleCreateNewRoom(): void {
-  const roomID = v4();
-  push(`/room/${roomID}`);
+type TRoomData = {
+  name: string
 }
 
-function handleEnterAnRoom(): void {
-  //TODO: Добавить проверку на существование id комнаты
-  push(`/room/${roomID.value}`);
+type TInterlocutorData = {
+  userName?: string
+}
+
+const {push} = useRouter();
+const {t} = useI18n();
+const store = useStore();
+const {checkingRoomLink, checkUserName} = useRoomValidation();
+
+const roomLinks = ref<string>('');
+
+const authUser = computed(() => store.getters.getAuthUser);
+const createRoom = (data: TRoomData) => store.dispatch('createRoom', data);
+const createInterlocutor = (data: TInterlocutorData) => store.dispatch('createInterlocutor', data);
+
+async function handleCreateNewRoom(): Promise<void> {
+  const {userName, stopIndicator} = await checkUserName(authUser.value);
+  const dataInterlocutor: TInterlocutorData = userName ? {userName} : {};
+
+  if (!stopIndicator) {
+    const roomID = v4();
+    try {
+      await createInterlocutor(dataInterlocutor);
+      await createRoom({name: roomID});
+      push(`/room/${roomID}`);
+    } catch (err) {
+      errorHandler(err.response)
+    }
+  }
+}
+
+async function handleEnterAnRoom(): Promise<void> {
+  const path = await checkingRoomLink();
+  if (!path) return;
+  const {userName, stopIndicator} = await checkUserName(authUser.value);
+
+  const dataInterlocutor: TInterlocutorData = userName ? {userName} : {};
+
+  if (path && !stopIndicator) {
+    try {
+      await createInterlocutor(dataInterlocutor);
+      push(path);
+    } catch (err) {
+      errorHandler(err.response)
+    }
+  }
 }
 </script>
 
@@ -63,7 +101,7 @@ function handleEnterAnRoom(): void {
           type="text"
           id="small-input"
           :placeholder="$t('home[\'id room\']')"
-          v-model="roomID"
+          v-model="roomLinks"
           class="pl-10 block w-full text-gray-900 border border-gray-500 rounded-md shadow-lg cursor-text
             focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400
             dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-gray-500
