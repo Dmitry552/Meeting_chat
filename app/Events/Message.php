@@ -27,7 +27,12 @@ class Message implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'message.created';
+        return '12.1';
+    }
+
+    public function broadcastWith(): array
+    {
+        return $this->message;
     }
 
     /**
@@ -37,6 +42,6 @@ class Message implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('chat');
+        return new Channel('videoMeeting');
     }
 }

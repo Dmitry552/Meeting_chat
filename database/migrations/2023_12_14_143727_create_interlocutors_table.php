@@ -18,12 +18,13 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('room_id')->nullable();
             $table->string('interlocutorName');
+            $table->string('code');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('room_id')->references('id')->on('rooms');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
 
-            $table->dropSoftDeletes();
+            $table->softDeletes();
         });
     }
 

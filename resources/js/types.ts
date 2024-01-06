@@ -17,9 +17,14 @@ export type User = {
 export type Interlocutor = {
   id: number,
   interlocutorName: string,
-  user: User
+  code: string,
+  user: User,
+  control?: ControlStream,
+  mediaStream?: MediaStream,
+  peerMediaElement?: HTMLVideoElement,
+  peerConnection?: RTCPeerConnection
   created_at: string,
-  updated_at: string
+  updated_at: string,
 }
 
 export type Room = {

@@ -4,7 +4,6 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\User\AuthUserController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InterlocutorController;
 
@@ -39,7 +38,9 @@ Route::middleware([
 ])
     ->prefix('interlocutor')
     ->group(function () {
-   Route::post('/', [InterlocutorController::class, 'store']);
+        Route::get('/{interlocutor:code}', [InterlocutorController::class, 'show']);
+        Route::post('/', [InterlocutorController::class, 'store']);
+        Route::delete('/{interlocutor:code}', [InterlocutorController::class, 'destroy']);
 });
 
 Route::post('/room/{interlocutor}', [RoomController::class, 'store']);
@@ -65,10 +66,7 @@ Route::middleware([
         Route::delete('/{user}', [UserController::class, 'destroy']);
 });
 
-Route::middleware([
-    'interlocutor:user',
-])
-    ->prefix('videoChat')
+Route::prefix('videoChat')
     ->group(function () {
         require __DIR__ ."/channels/videoChat/videoChat.php";
     });

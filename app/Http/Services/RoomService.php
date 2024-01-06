@@ -30,6 +30,17 @@ class RoomService
         return $room;
     }
 
+    /**
+     * @param Room $room
+     * @return RoomResource
+     */
+    public function delete(Room $room): RoomResource
+    {
+        $this->repository->delete($room);
+
+        return new RoomResource($room);
+    }
+
     public function show(Room $room): RoomResource
     {
         return new RoomResource($room);

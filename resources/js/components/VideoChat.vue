@@ -1,30 +1,31 @@
 <script lang="ts" setup>
-import useWebRTC, {LOCAL_VIDEO} from "../composables/useWebRTC";
+import useWebRTC from "../composables/useWebRTC";
 import {useRoute, useRouter} from "vue-router";
 import VideoList from "../components/VideoList.vue";
 import {getBlockWidth, getSubBlockWidth} from "../utils/getBlockWidth";
 import ACTIONS from "../socket/actions";
-import useSocket from "../composables/useSocket";
+// import useSocket from "../composables/useSocket";
 import {computed, ref} from "vue";
-import {Client, Clients} from "../types";
+import {Client, Clients, ControlStream, Interlocutor} from "../types";
 import MeetingControl from "./MeetingControl.vue";
 import swal from 'sweetalert';
+import * as types from "../store/modules/Interlocutor/mutationsInterlocutorType";
+import {useStore} from "../store";
+import {
+  setInterlocutors
+} from '../store/modules/Interlocutor/mutations'
 
 export type TCurrentVideo = {
   client: Client
 }
 
 const route = useRoute();
-const router = useRouter();
-
-const {action} = useSocket();
+const {push} = useRouter();
+const store = useStore();
 
 const {
   videos,
-  clients,
-  peerMediaElements,
-  localMediaStream,
-  clientsMediaStream,
+  // clients,
   showVideo,
   showAudio,
   audioOutputDevices,
@@ -34,64 +35,80 @@ const {
   currentAudioInputDevices,
   currentAudioOutputDevices,
   startCapture,
-  addNewClient,
   handleMuteVideo,
   handleMuteAudio,
   handleScreenBroadcast,
   handleHungUp,
   setDevices
-} = useWebRTC(route.params.id as string);
+} = useWebRTC();
 
+const currentInterlocutor = computed<Interlocutor>(() => store.getters.getCurrentInterlocutor);
+const interlocutors = computed<Interlocutor[]>(() => store.getters.getInterlocutorsRoom);
 
-startCapture()
-  .then(() => {
-    action(ACTIONS.JOIN, {room: route.params.id as string})
-  })
-  .catch((error) => {
-    showVideo.value = false;
-    showAudio.value = false;
-    addNewClient(LOCAL_VIDEO);
+const joinAction = () => store.dispatch('joined');
+const removeInterlocutor = (data: string) => store.dispatch('removeInterlocutor', data);
+
+await startCapture().then(() => {
+    console.log('startCapture');
+    joinAction();
+  }).catch((error) => {
     swal('Ops...', `${error}`, 'error');
     console.error(`Error getting userMedia: ${error}`)
   })
 
-const currentVideo = ref<Client | null>(null);
-const allClients = ref<Clients>([]);
+const currentVideo = ref<Interlocutor | null>(null);
+// const currentVideo = ref<Client | null>(null);
+// const allClients = ref<Clients>([]);
+const allInterlocutors = ref<Interlocutor[]>([]);
 const current_video = ref<HTMLVideoElement | null>(null);
 
 function handleExpandVideo(event: Event) {
-  let oldClients: Clients;
+  let oldInterlocutor;
+  // let oldClients: Clients;
 
   if (!currentVideo.value) {
-    allClients.value = clients.value;
+    allInterlocutors.value = interlocutors.value;
+    // allClients.value = clients.value;
   }
 
-  if (!(currentVideo.value) || currentVideo.value?.name !== (event.target as HTMLVideoElement).id) {
-    currentVideo.value = clients.value.find(client => client!.name === (event.target as HTMLVideoElement).id) as Client;
+  if (!(currentVideo.value) || currentVideo.value?.code !== (event.target as HTMLVideoElement).id) {
+    currentVideo.value = interlocutors.value!.find(
+      interlocutor => interlocutor.code === (event.target as HTMLVideoElement).id
+    ) as Interlocutor;
+    // currentVideo.value = clients.value.find(client => client!.name === (event.target as HTMLVideoElement).id) as Client;
     console.log(current_video.value);
-    if (currentVideo.value!.name === LOCAL_VIDEO) {
-      current_video.value!.srcObject = localMediaStream.value;
+    if (currentVideo.value!.code === currentInterlocutor.value!.code) {
+      current_video.value!.srcObject = currentInterlocutor.value!.mediaStream!;
     } else {
-      current_video.value!.srcObject = clientsMediaStream.value[currentVideo.value!.name];
+      current_video.value!.srcObject = currentVideo.value!.mediaStream!;
     }
+    // if (currentVideo.value!.name === LOCAL_VIDEO) {
+    //   current_video.value!.srcObject = localMediaStream.value;
+    // } else {
+    //   current_video.value!.srcObject = clientsMediaStream.value[currentVideo.value!.name];
+    // }
   }
 
-  oldClients = allClients.value.filter((client) => {
-    return client!.name !== currentVideo.value!.name
+  oldInterlocutor = allInterlocutors.value.filter((interlocutor) => {
+    return interlocutor!.code !== currentVideo.value!.code;
   });
-
-  clients.value = [...oldClients];
+  // oldClients = allClients.value.filter((client) => {
+  //   return client!.name !== currentVideo.value!.name
+  // });
+  setInterlocutors(oldInterlocutor);
+  // clients.value = [...oldClients];
 }
 
-function handleLeavingMeeting() {
-  handleHungUp();
-  router.push('/');
+async function handleLeavingMeeting() {
+  await handleHungUp();
+  await push('home');
 }
 
 function handleMinimizeVideo() {
-  clients.value = allClients.value;
+  setInterlocutors(allInterlocutors.value);
+  // clients.value = allClients.value;
   current_video.value!.srcObject = null;
-  allClients.value = [];
+  allInterlocutors.value = [];
   currentVideo.value = null;
 }
 
@@ -101,9 +118,11 @@ function handleChangeDevice(option: {id: string, name: string}) {
 
 const getWidth = computed<string>(() => {
   if (currentVideo.value) {
-    return getSubBlockWidth(clients.value.length)
+    return getSubBlockWidth(interlocutors.value.length)
+    // return getSubBlockWidth(clients.value.length)
   } else {
-    return getBlockWidth(clients.value.length)
+    return getSubBlockWidth(interlocutors.value.length)
+    // return getBlockWidth(clients.value.length)
   }
 });
 </script>
@@ -120,11 +139,11 @@ const getWidth = computed<string>(() => {
         <div
           class="w-full overflow-hidden flex justify-center
             items-center"
-          :id="currentVideo?.name"
+          :id="currentVideo?.code"
         >
           <video
             class="block h-full rounded-xl border-2 border-gray-300 dark:border-gray-500"
-            :id="currentVideo?.name"
+            :id="currentVideo?.code"
             ref="current_video"
             autoplay
             playsinline
@@ -156,7 +175,6 @@ const getWidth = computed<string>(() => {
       v-show="!currentVideo"
       :getWidth="getWidth"
       :currentVideo="currentVideo"
-      :clients="clients"
       :videos="videos"
       @expandVideo="handleExpandVideo"
     />

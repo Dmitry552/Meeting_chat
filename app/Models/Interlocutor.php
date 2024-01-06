@@ -11,7 +11,8 @@ class Interlocutor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'interlocutorName'
+        'interlocutorName',
+        'code'
     ];
 
     public function room(): BelongsTo

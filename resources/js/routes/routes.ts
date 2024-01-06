@@ -6,6 +6,7 @@ import NotFound from "../pages/NotFound.vue";
 import ResetPassword from "../pages/ResetPassword.vue";
 import ForgotPassword from "../pages/ForgotPassword.vue";
 import User from '../pages/User.vue';
+import Exception from '../pages/Exception.vue';
 import {NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw} from "vue-router";
 import {LayoutsName, TLayoutsName} from "./types";
 import {store} from '../store';
@@ -24,6 +25,11 @@ const routes: TRoutes[] = [
     meta: {
       layout: LayoutsName.LOGIN
     }
+  },
+  {
+    path: '/exception',
+    component: Exception,
+    name: 'exception'
   },
   {
     path: '/sign-in',

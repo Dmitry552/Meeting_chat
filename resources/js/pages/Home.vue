@@ -1,34 +1,36 @@
 <script lang="ts" setup>
 import {v4} from 'uuid';
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "../store";
 import {errorHandler} from "../utils/helpers";
 import useRoomValidation from "../composables/useRoomValidation";
-
-type TRoomData = {
-  name: string
-}
-
-type TInterlocutorData = {
-  userName?: string
-}
+// import useSocket from "../composables/useSocket";
+import {TCreateRoomData} from "../store/modules/Room/types";
+import {TCreateInterlocutorData} from "../store/modules/Interlocutor/types";
+import {Interlocutor} from "../types";
 
 const {push} = useRouter();
 const {t} = useI18n();
 const store = useStore();
 const {checkingRoomLink, checkUserName} = useRoomValidation();
+// const getInterlocutorsRoom = (data: string) => store.dispatch('getInterlocutorsRoom', data);
+// const interlocutors = computed<Interlocutor[]>(() => store.getters.getInterlocutorsRoom);
+// getInterlocutorsRoom('4f34f271-1faa-4279-a86b-6eeac04164bd');
+// watch(interlocutors, () => {
+//   console.log('interlocutors', interlocutors);
+// });
 
 const roomLinks = ref<string>('');
 
 const authUser = computed(() => store.getters.getAuthUser);
-const createRoom = (data: TRoomData) => store.dispatch('createRoom', data);
-const createInterlocutor = (data: TInterlocutorData) => store.dispatch('createInterlocutor', data);
+const createRoom = (data: TCreateRoomData) => store.dispatch('createRoom', data);
+const createInterlocutor = (data: TCreateInterlocutorData) => store.dispatch('createInterlocutor', data);
 
 async function handleCreateNewRoom(): Promise<void> {
   const {userName, stopIndicator} = await checkUserName(authUser.value);
-  const dataInterlocutor: TInterlocutorData = userName ? {userName} : {};
+  const dataInterlocutor: TCreateInterlocutorData = userName ? {userName} : {};
 
   if (!stopIndicator) {
     const roomID = v4();
@@ -47,7 +49,7 @@ async function handleEnterAnRoom(): Promise<void> {
   if (!path) return;
   const {userName, stopIndicator} = await checkUserName(authUser.value);
 
-  const dataInterlocutor: TInterlocutorData = userName ? {userName} : {};
+  const dataInterlocutor: TCreateInterlocutorData = userName ? {userName} : {};
 
   if (path && !stopIndicator) {
     try {

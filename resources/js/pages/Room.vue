@@ -2,17 +2,16 @@
 import ClientList from "../components/ClientList.vue";
 import TextChat from "../components/TextChat.vue";
 import VideoChat from "../components/VideoChat.vue";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useStore} from "../store";
 import {useRoute, useRouter} from "vue-router";
 import {Interlocutor, Room, User} from "../types";
 import {useI18n} from "vue-i18n";
 import useRoomValidation from "../composables/useRoomValidation";
 import {errorHandler} from "../utils/helpers";
-
-type TInterlocutorData = {
-  userName?: string
-}
+import {TCreateInterlocutorData} from "../store/modules/Interlocutor/types";
+import {TJoinRoomData} from "../store/modules/Room/types";
+import {setCurrentInterlocutor} from "../store/modules/Interlocutor/mutations";
 
 const store = useStore();
 const {params} = useRoute();
@@ -23,8 +22,9 @@ const {checkUserName} = useRoomValidation();
 const checkRoom = (data: string) => store.dispatch('checkRoom', data);
 const getRoom = (data: string) => store.dispatch('getRoom', data);
 const getInterlocutorsRoom = (data: string) => store.dispatch('getInterlocutorsRoom', data);
-const createInterlocutor = (data: TInterlocutorData) => store.dispatch('createInterlocutor', data);
-const joinRoom = (data) => store.dispatch('joinRoom', data);
+const createInterlocutor = (data: TCreateInterlocutorData) => store.dispatch('createInterlocutor', data);
+const joinRoom = (data: TJoinRoomData) => store.dispatch('joinRoom', data);
+const getInterlocutor = (data: string) => store.dispatch('getInterlocutor', data);
 
 const showClientList = ref<boolean>(false);
 const showChat = ref<boolean>(false);
@@ -33,24 +33,41 @@ const room = computed<Room>(() => store.getters.getRoom);
 const currentInterlocutor = computed<Interlocutor>(() => store.getters.getCurrentInterlocutor);
 const authUser = computed<User>(() => store.getters.getAuthUser);
 
-checkRoom(params.id as string).then(data => {
+await checkRoom(params.id as string).then(data => {
   if (!data) {
     push('/');
   }
 })
 
-if (!currentInterlocutor.value) {
+if (!localStorage.getItem('currentInterlocutor')) {
+  await createNewInterlocutor();
+} else {
+  const currentInterlocutor = await getInterlocutor(localStorage.getItem('currentInterlocutor')!);
+  setCurrentInterlocutor(currentInterlocutor);
+
+  const joinData: TJoinRoomData = {
+    roomId: params.id as string,
+    interlocutor: currentInterlocutor.id
+  }
+
+  await joinRoom(joinData);
+}
+
+await getRoom(params.id as string);
+await getInterlocutorsRoom(room.value.name);
+
+async function createNewInterlocutor(): Promise<void> {
   const {userName, stopIndicator} = await checkUserName(authUser.value);
 
   const dataInterlocutor = userName ? {userName} : {};
-  const joinData = {
-    roomId: params.id,
+  const joinData: TJoinRoomData = {
+    roomId: params.id as string,
   }
 
   if (!stopIndicator) {
     try {
       await createInterlocutor(dataInterlocutor);
-      joinData.interlocutor = currentInterlocutor.value.id;
+      joinData.interlocutor = currentInterlocutor.value!.id as string;
       await joinRoom(joinData);
     } catch (err) {
       errorHandler(err.response)
@@ -59,11 +76,6 @@ if (!currentInterlocutor.value) {
     push('/');
   }
 }
-
-getRoom(params.id as string).then(() => {
-  getInterlocutorsRoom(room.value.name)
-})
-
 function handleShowClientList(): void {
   showClientList.value = !showClientList.value;
 }

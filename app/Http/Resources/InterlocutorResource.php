@@ -18,6 +18,7 @@ class InterlocutorResource extends JsonResource
         return [
             'id' => $this->id,
             'interlocutorName' => $this->interlocutorName,
+            'code' => $this->code,
             'user' => new UserResource($this->user),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at

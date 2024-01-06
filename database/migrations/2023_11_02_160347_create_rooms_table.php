@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('creator');
             $table->timestamps();
 
-            $table->dropSoftDeletes();
+            $table->softDeletes();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Room\InterlocutorCreateRequest;
 use App\Http\Services\InterlocutorService;
+use App\Models\Interlocutor;
 use App\Models\Room;
 use Illuminate\Http\JsonResponse;
 
@@ -28,6 +29,16 @@ class InterlocutorController extends Controller
     }
 
     /**
+     *
+     * @param Interlocutor $interlocutor
+     * @return JsonResponse
+     */
+    public function show(Interlocutor $interlocutor): JsonResponse
+    {
+        return response()->json($this->service->show($interlocutor));
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param InterlocutorCreateRequest $request
@@ -36,5 +47,14 @@ class InterlocutorController extends Controller
     public function store(InterlocutorCreateRequest $request): JsonResponse
     {
         return response()->json($this->service->create($request->all()));
+    }
+
+    /**
+     * @param Interlocutor $interlocutor
+     * @return JsonResponse
+     */
+    public function destroy(Interlocutor $interlocutor): JsonResponse
+    {
+        return response()->json($this->service->delete($interlocutor));
     }
 }
