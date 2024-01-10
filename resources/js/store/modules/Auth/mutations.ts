@@ -5,7 +5,6 @@ import {TAuthState} from "./index";
 export default {
   [types.SAVE_AUTH_TOKEN]: (state: TAuthState, payload: {token: string}): void => {
     state.token = payload.token;
-    console.log(state);
   },
   [types.SAVE_AUTH_USER]: (state: TAuthState, payload: {authUser: User}): void => {
     state.authUser = payload.authUser;

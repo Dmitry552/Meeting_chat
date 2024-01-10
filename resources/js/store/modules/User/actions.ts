@@ -34,7 +34,7 @@ export const uploadPassword: TCustomAction<TUserState> = ({commit}, payload): Pr
   return new Promise((resolve, reject) => {
     const id = payload.id;
     delete payload.id;
-    console.log(payload);
+
     $authHttp.post(`/api/user/password/${id}`, payload)
       .then(() => {
         resolve();

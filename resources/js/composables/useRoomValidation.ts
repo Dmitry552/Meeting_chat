@@ -4,19 +4,19 @@ import {User} from "../types";
 import {useI18n} from "vue-i18n";
 
 export interface IRoomValidation {
-  checkingRoomLink: () => Promise<string>,
+  checkingRoomLink: (roomLink: string) => Promise<string>,
   checkUserName: (authUser: User) => Promise<{userName: string, stopIndicator: boolean}>
 }
 
 export default function useRoomValidation(): IRoomValidation {
   const {t} = useI18n();
 
-  const checkingRoomLink = async (): Promise<string> => {
+  const checkingRoomLink = async (roomLink): Promise<string> => {
     let path: string = '';
 
-    if (!isValidUrl(roomLinks.value)) return `/room/${roomLinks.value}`;
+    if (!isValidUrl(roomLink)) return `/room/${roomLink}`;
 
-    if (!roomLinks.value.startsWith(`${import.meta.env.VITE_APP_URL}/room/`)) {
+    if (!roomLink.startsWith(`${import.meta.env.VITE_APP_URL}/room/`)) {
       await swal( {
         title: "Ops!",
         text: t("errors.home.url"),
@@ -26,7 +26,7 @@ export default function useRoomValidation(): IRoomValidation {
       return path;
     }
 
-    const url: URL = new URL(roomLinks.value);
+    const url: URL = new URL(roomLink);
 
     if (!url.pathname.split('/')[2]) {
       await swal( {

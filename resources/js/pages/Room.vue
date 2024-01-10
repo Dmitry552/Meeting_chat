@@ -67,7 +67,7 @@ async function createNewInterlocutor(): Promise<void> {
   if (!stopIndicator) {
     try {
       await createInterlocutor(dataInterlocutor);
-      joinData.interlocutor = currentInterlocutor.value!.id as string;
+      joinData.interlocutor = String(currentInterlocutor.value!.id);
       await joinRoom(joinData);
     } catch (err) {
       errorHandler(err.response)

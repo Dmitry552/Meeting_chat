@@ -15,12 +15,13 @@ abstract class BaseVideoEvent implements ShouldBroadcast
     use SerializesModels;
 
     protected const ADD_PEER = "ADD_PEER";
+    protected const ADD_CURRENT_PEER = "ADD_CURRENT_PEER";
     protected const ICE_CANDIDATE = "ICE_CANDIDATE";
     protected const SESSION_DESCRIPTION = "SESSION_DESCRIPTION";
     protected const REMOVE_PEER = "REMOVE_PEER";
     protected const MUTED = "MUTED";
 
-    protected string $roomName;
+    protected string $channelName;
     protected array $data;
 
     /**
@@ -28,9 +29,9 @@ abstract class BaseVideoEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(string $roomName, array $data)
+    public function __construct(string $channelName, array $data)
     {
-        $this->roomName = $roomName;
+        $this->channelName = $channelName;
         $this->data = $data;
     }
 
@@ -39,8 +40,7 @@ abstract class BaseVideoEvent implements ShouldBroadcast
      */
     public function broadcastAs(): string
     {
-        return $this->roomName . '.'
-            . $this->action();
+        return $this->action();
     }
 
     /**
@@ -60,11 +60,6 @@ abstract class BaseVideoEvent implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('videoMeeting');
+        return new Channel('videoMeeting.' . $this->channelName);
     }
-
-    /**
-     * @return string
-     */
-    abstract public function action(): string;
 }

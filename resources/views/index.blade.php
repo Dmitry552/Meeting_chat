@@ -10,7 +10,7 @@
     @vite('resources/js/app.ts')
     @vite('resources/css/app.css')
 </head>
-    <body class="app">
+<body class="app">
     <div id="document-preload" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         <img src="loading.gif" alt="" />
     </div>

@@ -1,5 +1,4 @@
-
-declare module 'freeice';
+declare module "freeice";
 
 declare module '*.svg' {
   import Vue, {VueConstructor} from 'vue';

@@ -19,5 +19,4 @@ const RoomModule: Module<TRoomState, TRootState> = {
   state,
   getters
 }
-
 export default RoomModule;

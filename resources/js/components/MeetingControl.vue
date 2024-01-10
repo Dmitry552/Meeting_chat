@@ -83,8 +83,8 @@ function handleChangeDevice(value: HTMLInputElement) {
 </script>
 
 <template>
-  <div class="3 bottom-0 w-full bg-gray-300">
-    <div class="h-16 flex justify-center items-center gap-4 grow-0">
+  <div class="3 bottom-0 w-full bg-white dark:bg-gray-600">
+    <div class="h-10 flex justify-center items-center gap-4 grow-0">
       <control-element
         deviceKind="audioinput"
         :alternativePicture="microphoneOn"
@@ -121,11 +121,11 @@ function handleChangeDevice(value: HTMLInputElement) {
       />
       <div
         @click="handleScreenBroadcast"
-        class="screen_display  rounded-full w-10 h-10 bg-gray-300 border border-gray-300 flex justify-center
-            items-center cursor-pointer shadow-lg hover:bg-gray-500 hover:border-gray-500 dark:bg-rose-800
-            dark:hover:ring-rose-900">
+        class="screen_display  rounded-full w-8 h-8 bg-gray-100 border border-gray-100 flex justify-center
+            items-center cursor-pointer shadow-lg hover:bg-gray-300 hover:border-gray-300 dark:bg-gray-300
+            dark:hover:bg-gray-600 dark:hover:border-gray-600">
         <svg
-          class="h-6 w-6 text-gray-700"
+          class="h-5 w-5 text-gray-700"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -140,12 +140,12 @@ function handleChangeDevice(value: HTMLInputElement) {
       </div>
       <div
         @click="handleLeavingMeeting"
-        class="leave_meeting rounded-full w-20 h-10 bg-red-700 border border-red-700 flex justify-center
+        class="leave_meeting rounded-full w-16 h-8 bg-red-700 border border-red-700 flex justify-center
             items-center cursor-pointer shadow-lg hover:bg-red-800 hover:border-red-800 dark:bg-rose-800
             dark:hover:ring-rose-900"
       >
         <svg
-          class="h-6 w-6 text-white"
+          class="h-5 w-5 text-white"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

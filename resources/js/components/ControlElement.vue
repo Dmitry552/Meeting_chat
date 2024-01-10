@@ -51,17 +51,17 @@ const listLeftPosition = computed<string>(() => {
 </script>
 
 <template>
-  <div class="relative h-10 flex justify-center items-center rounded-full shadow-lg">
+  <div class="relative h-8 flex justify-center items-center rounded-full shadow-lg">
     <div
       v-if="deviceKind === 'audiooutput'"
       @click="handleShowDevices"
-      class="px-2 h-full shadow-lg rounded-full bg-gray-300 border border-gray-300 flex justify-center
-            items-center gap-2 cursor-pointer hover:bg-gray-500 hover:border-gray-500 dark:bg-rose-800
-            dark:hover:ring-rose-900"
+      class="px-2 h-full shadow-lg rounded-full bg-gray-100 border border-gray-100 flex justify-center
+            items-center gap-2 cursor-pointer hover:bg-gray-300 hover:border-gray-300 dark:bg-gray-300
+            dark:hover:bg-gray-600 dark:hover:border-gray-600"
     >
       <img v-if="show || !alternativePicture" class="h-6 w-6 text-gray-700" :src="activePicture" alt="icon">
       <svg
-        class="h-6 w-6 text-gray-700"
+        class="h-5 w-5 text-gray-700"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -72,21 +72,21 @@ const listLeftPosition = computed<string>(() => {
     <div
       v-else
       @click="handleMute"
-      class="h-full w-10 rounded-l-full bg-gray-300 border border-gray-300 flex justify-center
-            items-center cursor-pointer hover:bg-gray-500 hover:border-gray-500 dark:bg-rose-800
-            dark:hover:ring-rose-900"
+      class="h-full w-10 rounded-l-full bg-gray-100 border border-gray-100 flex justify-center
+            items-center cursor-pointer hover:bg-gray-300 hover:border-gray-300 dark:bg-gray-300
+            dark:hover:bg-gray-600 dark:hover:border-gray-600"
     >
-      <img v-if="show || !alternativePicture" class="h-6 w-6 text-gray-700" :src="activePicture" alt="icon">
-      <img v-if="!show && alternativePicture" class="h-6 w-6 text-gray-700" :src="alternativePicture" alt="icon">
+      <img v-if="show || !alternativePicture" class="h-5 w-5 text-gray-700" :src="activePicture" alt="icon">
+      <img v-if="!show && alternativePicture" class="h-5 w-5 text-gray-700" :src="alternativePicture" alt="icon">
     </div>
     <button
       v-if="deviceKind !== 'audiooutput'"
       @click="handleShowDevices"
-      class="w-10 h-full rounded-r-full bg-gray-300 border border-gray-300 flex justify-center
-          items-center cursor-pointer hover:bg-gray-500 hover:border-gray-500 dark:bg-rose-800
-          dark:hover:ring-rose-900"
+      class="w-10 h-full rounded-r-full bg-gray-100 border border-gray-100 flex justify-center
+          items-center cursor-pointer hover:bg-gray-300 hover:border-gray-300 dark:bg-gray-300
+          dark:hover:bg-gray-600 dark:hover:border-gray-600"
     >
-      <svg class="h-6 w-6 text-gray-700"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="h-5 w-5 text-gray-700"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
       </svg>
     </button>

@@ -2,10 +2,7 @@
 
 namespace App\Events\VideoEvent;
 
-/**
- * Channel: "VideoMeeting"
- */
-class JoinRoom extends BaseVideoEvent
+class CurrentInterlocutorJoinedRoom extends BaseVideoEvent
 {
     public function __construct(string $roomName, string $interlocutorCode, array $data)
     {

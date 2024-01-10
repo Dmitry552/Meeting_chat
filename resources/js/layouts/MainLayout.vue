@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-screen">
     <m-header :showLogIn="false" :showAvatar="!!authUser"/>
-    <main class="bg-white dark:bg-gray-600 h-full px-2 flex
+    <main class="bg-white dark:bg-gray-600 h-full px-2 flex overflow-hidden
           justify-center items-center"
     >
       <slot/>

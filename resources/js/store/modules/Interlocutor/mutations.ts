@@ -1,9 +1,7 @@
 import * as types from "./mutationsInterlocutorType";
 import {store} from '../../';
 import {TInterlocutorState} from "./index";
-import {ControlStream, Interlocutor} from '../../../types';
-import {TPayloadData} from "./types";
-import {UPDATE_INTERLOCUTOR} from "./mutationsInterlocutorType";
+import {Interlocutor} from '../../../types';
 
 export default {
   [types.GET_INTERLOCUTORS]: (state: TInterlocutorState, payload: Interlocutor[]): void => {
@@ -24,6 +22,10 @@ export default {
       (interlocutor: Interlocutor): boolean => interlocutor.code !== payload
     );
   },
+  [types.REMOVE_INTERLOCUTORS]: (state: TInterlocutorState): void => {
+    state.interlocutors = null;
+    state.currentInterlocutor = null;
+  },
   [types.GET_CURRENT_INTERLOCUTOR]: (state: TInterlocutorState, payload: Interlocutor): void => {
     state.currentInterlocutor = payload;
   },
@@ -31,7 +33,6 @@ export default {
     state.currentInterlocutor = null;
   },
   [types.UPDATE_INTERLOCUTOR]: (state: TInterlocutorState, payload: Interlocutor): void => {
-    console.log('mutation', payload);
     state.interlocutors!.forEach(
       (interlocutor: Interlocutor) => {
         if (interlocutor.code === payload.code) {
@@ -49,6 +50,9 @@ export const updateInterlocutor = (data: Interlocutor) => store.commit(
 export const removeInterlocutor = (data: string) => store.commit(
   types.REMOVE_INTERLOCUTOR,
   data
+)
+export const removeInterlocutors = () => store.commit(
+  types.REMOVE_INTERLOCUTORS
 )
 export const setInterlocutors = (data: Interlocutor[]) => store.commit(
   types.SET_INTERLOCUTORS,

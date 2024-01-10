@@ -1,23 +1,17 @@
 <script lang="ts" setup>
 import useWebRTC from "../composables/useWebRTC";
 import {useRoute, useRouter} from "vue-router";
-import VideoList from "../components/VideoList.vue";
 import {getBlockWidth, getSubBlockWidth} from "../utils/getBlockWidth";
-import ACTIONS from "../socket/actions";
-// import useSocket from "../composables/useSocket";
 import {computed, ref} from "vue";
-import {Client, Clients, ControlStream, Interlocutor} from "../types";
-import MeetingControl from "./MeetingControl.vue";
+import { Interlocutor} from "../types";
 import swal from 'sweetalert';
-import * as types from "../store/modules/Interlocutor/mutationsInterlocutorType";
 import {useStore} from "../store";
+import VideoList from "../components/VideoList.vue";
+import MeetingControl from "./MeetingControl.vue";
+
 import {
   setInterlocutors
 } from '../store/modules/Interlocutor/mutations'
-
-export type TCurrentVideo = {
-  client: Client
-}
 
 const route = useRoute();
 const {push} = useRouter();
@@ -25,7 +19,6 @@ const store = useStore();
 
 const {
   videos,
-  // clients,
   showVideo,
   showAudio,
   audioOutputDevices,
@@ -38,18 +31,14 @@ const {
   handleMuteVideo,
   handleMuteAudio,
   handleScreenBroadcast,
-  handleHungUp,
   setDevices
 } = useWebRTC();
 
-const currentInterlocutor = computed<Interlocutor>(() => store.getters.getCurrentInterlocutor);
 const interlocutors = computed<Interlocutor[]>(() => store.getters.getInterlocutorsRoom);
 
 const joinAction = () => store.dispatch('joined');
-const removeInterlocutor = (data: string) => store.dispatch('removeInterlocutor', data);
 
 await startCapture().then(() => {
-    console.log('startCapture');
     joinAction();
   }).catch((error) => {
     swal('Ops...', `${error}`, 'error');
@@ -57,56 +46,40 @@ await startCapture().then(() => {
   })
 
 const currentVideo = ref<Interlocutor | null>(null);
-// const currentVideo = ref<Client | null>(null);
-// const allClients = ref<Clients>([]);
 const allInterlocutors = ref<Interlocutor[]>([]);
 const current_video = ref<HTMLVideoElement | null>(null);
 
 function handleExpandVideo(event: Event) {
+  if (interlocutors.value.length <= 1) {
+    return;
+  }
+
   let oldInterlocutor;
-  // let oldClients: Clients;
 
   if (!currentVideo.value) {
     allInterlocutors.value = interlocutors.value;
-    // allClients.value = clients.value;
   }
 
   if (!(currentVideo.value) || currentVideo.value?.code !== (event.target as HTMLVideoElement).id) {
     currentVideo.value = interlocutors.value!.find(
       interlocutor => interlocutor.code === (event.target as HTMLVideoElement).id
     ) as Interlocutor;
-    // currentVideo.value = clients.value.find(client => client!.name === (event.target as HTMLVideoElement).id) as Client;
-    console.log(current_video.value);
-    if (currentVideo.value!.code === currentInterlocutor.value!.code) {
-      current_video.value!.srcObject = currentInterlocutor.value!.mediaStream!;
-    } else {
-      current_video.value!.srcObject = currentVideo.value!.mediaStream!;
-    }
-    // if (currentVideo.value!.name === LOCAL_VIDEO) {
-    //   current_video.value!.srcObject = localMediaStream.value;
-    // } else {
-    //   current_video.value!.srcObject = clientsMediaStream.value[currentVideo.value!.name];
-    // }
+    current_video.value!.srcObject = currentVideo.value!.mediaStream!;
   }
 
   oldInterlocutor = allInterlocutors.value.filter((interlocutor) => {
     return interlocutor!.code !== currentVideo.value!.code;
   });
-  // oldClients = allClients.value.filter((client) => {
-  //   return client!.name !== currentVideo.value!.name
-  // });
+
   setInterlocutors(oldInterlocutor);
-  // clients.value = [...oldClients];
 }
 
-async function handleLeavingMeeting() {
-  await handleHungUp();
-  await push('home');
+function handleLeavingMeeting() {
+  push({name: 'home'});
 }
 
 function handleMinimizeVideo() {
   setInterlocutors(allInterlocutors.value);
-  // clients.value = allClients.value;
   current_video.value!.srcObject = null;
   allInterlocutors.value = [];
   currentVideo.value = null;
@@ -119,10 +92,8 @@ function handleChangeDevice(option: {id: string, name: string}) {
 const getWidth = computed<string>(() => {
   if (currentVideo.value) {
     return getSubBlockWidth(interlocutors.value.length)
-    // return getSubBlockWidth(clients.value.length)
   } else {
-    return getSubBlockWidth(interlocutors.value.length)
-    // return getBlockWidth(clients.value.length)
+    return getBlockWidth(interlocutors.value.length)
   }
 });
 </script>

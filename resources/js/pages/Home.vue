@@ -1,34 +1,28 @@
 <script lang="ts" setup>
 import {v4} from 'uuid';
-import {computed, ref, watch} from "vue";
+import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useStore} from "../store";
 import {errorHandler} from "../utils/helpers";
 import useRoomValidation from "../composables/useRoomValidation";
-// import useSocket from "../composables/useSocket";
 import {TCreateRoomData} from "../store/modules/Room/types";
 import {TCreateInterlocutorData} from "../store/modules/Interlocutor/types";
-import {Interlocutor} from "../types";
 
 const {push} = useRouter();
 const {t} = useI18n();
 const store = useStore();
 const {checkingRoomLink, checkUserName} = useRoomValidation();
-// const getInterlocutorsRoom = (data: string) => store.dispatch('getInterlocutorsRoom', data);
-// const interlocutors = computed<Interlocutor[]>(() => store.getters.getInterlocutorsRoom);
-// getInterlocutorsRoom('4f34f271-1faa-4279-a86b-6eeac04164bd');
-// watch(interlocutors, () => {
-//   console.log('interlocutors', interlocutors);
-// });
 
 const roomLinks = ref<string>('');
+const loading = ref<boolean>(false);
 
 const authUser = computed(() => store.getters.getAuthUser);
 const createRoom = (data: TCreateRoomData) => store.dispatch('createRoom', data);
 const createInterlocutor = (data: TCreateInterlocutorData) => store.dispatch('createInterlocutor', data);
 
 async function handleCreateNewRoom(): Promise<void> {
+  loading.value = true;
   const {userName, stopIndicator} = await checkUserName(authUser.value);
   const dataInterlocutor: TCreateInterlocutorData = userName ? {userName} : {};
 
@@ -39,14 +33,19 @@ async function handleCreateNewRoom(): Promise<void> {
       await createRoom({name: roomID});
       push(`/room/${roomID}`);
     } catch (err) {
+      loading.value = false;
       errorHandler(err.response)
     }
   }
 }
 
 async function handleEnterAnRoom(): Promise<void> {
-  const path = await checkingRoomLink();
-  if (!path) return;
+  loading.value = true;
+  const path = await checkingRoomLink(roomLinks.value);
+  if (!path) {
+    loading.value = false;
+    return;
+  }
   const {userName, stopIndicator} = await checkUserName(authUser.value);
 
   const dataInterlocutor: TCreateInterlocutorData = userName ? {userName} : {};
@@ -56,6 +55,7 @@ async function handleEnterAnRoom(): Promise<void> {
       await createInterlocutor(dataInterlocutor);
       push(path);
     } catch (err) {
+      loading.value = false;
       errorHandler(err.response)
     }
   }
@@ -69,6 +69,7 @@ async function handleEnterAnRoom(): Promise<void> {
           hover:bg-blue-800 shadow-lg font-semibold dark:bg-blue-950 dark:border-blue-950 dark:hover:bg-blue-900
           dark:hover:border-blue-900 dark:text-gray-300 lg:w-1/3 xl:w-1/4"
       @click="handleCreateNewRoom"
+      :disabled="loading"
     >
       {{$t("home['create new room']")}}
     </button>
@@ -108,6 +109,7 @@ async function handleEnterAnRoom(): Promise<void> {
             focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-700 dark:placeholder-gray-400
             dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder-gray-500
             dark:border-r-gray-300 lg:rounded-r-none lg:h-full"
+          :disabled="loading"
         >
       </div>
       <button
@@ -115,6 +117,7 @@ async function handleEnterAnRoom(): Promise<void> {
           text-sm mx-auto font-semibold h-10 hover:bg-gray-100 shadow-lg mt-3 dark:bg-gray-700 dark:border-gray-700
           dark:text-gray-300 dark:hover:bg-gray-800 xl:w-1/4 lg:rounded-l-none lg:border-l-0 lg:mx-0 lg:mt-0 lg:h-full"
         @click="handleEnterAnRoom"
+        :disabled="loading"
       >
         {{$t("home['enter']")}}
       </button>

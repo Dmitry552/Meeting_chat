@@ -4,8 +4,6 @@ import {$http} from "../../../utils/http";
 import * as types from './mutationsRoomTypes';
 import {TCreateRoomData, TJoinRoomData} from "./types";
 import {Commit} from "vuex";
-
-
 export const createRoom: TCustomAction<TRoomState> = (
   {commit, getters}: {commit: Commit, getters: any},
   payload: TCreateRoomData

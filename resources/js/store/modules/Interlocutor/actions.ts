@@ -4,8 +4,6 @@ import * as types from "./mutationsInterlocutorType";
 import {TInterlocutorState} from "./index";
 import {TCreateInterlocutorData} from "./types";
 import {Commit} from "vuex";
-import {ControlStream} from "../../../types";
-import {REMOVE_CURRENT_INTERLOCUTOR, REMOVE_INTERLOCUTOR} from "./mutationsInterlocutorType";
 
 export const createInterlocutor: TCustomAction<TInterlocutorState> = (
   {commit}: {commit: Commit},
@@ -72,7 +70,6 @@ export const getInterlocutor: TCustomAction<TInterlocutorState> = (
   return new Promise((resolve, reject) => {
     $http.get(`/api/interlocutor/${payload}`)
       .then(({data}) => {
-        console.log(data);
         commit(types.APP_INTERLOCUTOR, data);
         resolve(data);
       }).catch((err) => {

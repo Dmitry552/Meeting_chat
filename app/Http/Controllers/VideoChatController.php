@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VideoEvent\CurrentInterlocutorJoinedRoom;
 use App\Events\VideoEvent\JoinRoom;
 use App\Events\VideoEvent\LeaveRoom;
 use App\Events\VideoEvent\MuteStream;
@@ -10,14 +11,17 @@ use App\Events\VideoEvent\RelaySdp;
 use App\Http\Requests\VideoChat\MuteRequest;
 use App\Http\Requests\VideoChat\RelayIceRequest;
 use App\Http\Requests\VideoChat\RelaySdpRequest;
+use App\Http\Services\InterlocutorService;
 use App\Models\Interlocutor;
 use App\Models\Room;
-use Illuminate\Http\Request;
 
 class VideoChatController extends Controller
 {
-    public function __construct()
+    private InterlocutorService $interlocutorService;
+
+    public function __construct(InterlocutorService $interlocutorService)
     {
+        $this->interlocutorService = $interlocutorService;
     }
 
     /**
@@ -26,15 +30,27 @@ class VideoChatController extends Controller
      * @param Interlocutor $interlocutor
      * @return void
      */
-    public function join(Room $room, Interlocutor $interlocutor): void
+    public function join(Room $room, Interlocutor $interlocutor)
     {
-        event(new JoinRoom(
-            $room->name,
-            [
-                'interlocutorCode' => $interlocutor->code,
-                'createOffer' => true
-            ]
-        ));
+        $room->interlocutors->each(function ($_interlocutor) use ($room, $interlocutor) {
+            event(new JoinRoom(
+                $room->name,
+                $_interlocutor->code,
+                [
+                    'interlocutorCode' => $interlocutor->code,
+                    'createOffer' => false
+                ]
+            ));
+
+            event(new CurrentInterlocutorJoinedRoom(
+                $room->name,
+                $interlocutor->code,
+                [
+                    'interlocutorCode' => $_interlocutor->code,
+                    'createOffer' => true
+                ]
+            ));
+        });
     }
 
     /**
@@ -51,6 +67,8 @@ class VideoChatController extends Controller
                 'interlocutorCode' => $interlocutor->code,
             ]
         ));
+
+        $this->interlocutorService->delete($interlocutor);
     }
 
     /**

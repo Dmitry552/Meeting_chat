@@ -26,7 +26,6 @@ export const login: TCustomAction<TAuthState> = ({commit}, payload): Promise<voi
         resolve(data);
       })
       .catch(error => {
-        console.log(error);
         reject(error.response);
       });
   });
@@ -60,7 +59,6 @@ export const logout: TCustomAction<TAuthState> = ({commit}): Promise<void> => {
         resolve();
       })
       .catch(error => {
-        console.log(error);
         reject(error.response);
       });
   });
