@@ -2,8 +2,7 @@
 
 namespace Tests\Feature\User;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Feature\User\Traits\UserAuthorizedTrait;
+use Tests\Feature\Traits\UserAuthorizedTrait;
 use Tests\TestCase;
 
 abstract class BaseUserTest extends TestCase
@@ -34,15 +33,6 @@ abstract class BaseUserTest extends TestCase
     /**
      * Methods auth
      */
-    protected function getAuthUserLoginRequest(): array
-    {
-        return [
-            'access_token',
-            'token_type',
-            'expires_in',
-        ];
-    }
-
     protected function getValidationErrorStructure(): array
     {
         return [
@@ -96,25 +86,6 @@ abstract class BaseUserTest extends TestCase
     /**
      * Methods user
      */
-    protected function getUserStructure(): array
-    {
-        return [
-            'id',
-            'firstName',
-            'lastName',
-            'gender',
-            'phone',
-            'currentAddress',
-            'permanantAddress',
-            'email',
-            'birthday',
-            'email_verified',
-            'avatarPath',
-            'created_at',
-            'updated_at'
-        ];
-    }
-
     protected function getUsersStructure(): array
     {
         return [

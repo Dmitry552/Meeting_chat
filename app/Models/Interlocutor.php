@@ -12,7 +12,8 @@ class Interlocutor extends Model
 
     protected $fillable = [
         'interlocutorName',
-        'code'
+        'code',
+        'user_id'
     ];
 
     public function room(): BelongsTo

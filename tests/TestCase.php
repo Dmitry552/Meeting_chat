@@ -36,4 +36,26 @@ abstract class TestCase extends BaseTestCase
     protected const STATUS_FORBIDDEN = 403;
     protected const STATUS_BAD_REQUEST = 400;
     protected const STATUS_MODEL_USED = 409;
+
+    /**
+     * Global structure
+     */
+    protected function getUserStructure(): array
+    {
+        return [
+            'id',
+            'firstName',
+            'lastName',
+            'gender',
+            'phone',
+            'currentAddress',
+            'permanantAddress',
+            'email',
+            'birthday',
+            'email_verified',
+            'avatarPath',
+            'created_at',
+            'updated_at'
+        ];
+    }
 }

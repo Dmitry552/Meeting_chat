@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\User;
 
-use Tests\Feature\User\Traits\UserAuthorizedTrait;
-
 class AuthUserTest extends BaseUserTest
 {
     protected function getUrlLogin(): string

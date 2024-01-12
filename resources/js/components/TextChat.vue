@@ -13,7 +13,7 @@ function handleHidingChat() {
     :class="['hidden md:block relative transition-all ease-in-out duration-200 bg-white cursor-pointer flex-none',
     'shadow-[0px_0px_20px_0px_#d1d5db] z-20',
     'dark:bg-gray-600 dark:shadow-gray-700',
-    showChat ? 'w-[300px] lg:w-[400px]' : 'w-0']"
+    showChat ? 'w-[500px] lg:w-[600px]' : 'w-0']"
   >
     <div
       @click="handleHidingChat"

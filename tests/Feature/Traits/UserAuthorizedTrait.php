@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Feature\User\Traits;
+namespace Tests\Feature\Traits;
 
-use Illuminate\Testing\TestResponse;
 use Illuminate\Testing\AssertableJsonString;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 use Throwable;
 
@@ -42,6 +42,15 @@ trait UserAuthorizedTrait
             $responseData['token_type'],
             'bearer ' . $responseData['access_token']
         );
+    }
+
+    protected function getAuthUserLoginRequest(): array
+    {
+        return [
+            'access_token',
+            'token_type',
+            'expires_in',
+        ];
     }
 
     /**

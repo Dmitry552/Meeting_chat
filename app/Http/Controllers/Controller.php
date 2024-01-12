@@ -21,6 +21,10 @@ use Illuminate\Routing\Controller as BaseController;
  *     name="Users",
  *     description="Endpoints for users"
  * ),
+ * @OA\Tag(
+ *     name="Interlocutors",
+ *     description="Endpoints for interlocutors"
+ * ),
  * @OA\Components(
  *     @OA\SecurityScheme(
  *         type="http",
