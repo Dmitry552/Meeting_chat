@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import {computed, toRef, watch} from "vue";
+import {computed, toRef} from "vue";
 import {Interlocutor} from '../types';
 import {useStore} from "../store";
+import useHeightCalculator from "../composables/useHeightCalculator";
 
 type TVideoListProps = {
   getWidth: string,
@@ -16,8 +17,11 @@ type TVideoListEmit = {
 const store = useStore();
 
 const props = defineProps<TVideoListProps>();
-
 const videos = toRef(props.videos);
+
+const {
+  screenElement
+} = useHeightCalculator(videos);
 
 const emit = defineEmits<TVideoListEmit>();
 
@@ -35,24 +39,24 @@ function handleExpandVideo(event: Event) {
 <template>
   <div
     :class="[currentVideo ? 'absolute bottom-0 left-0' : '',
-      '2 w-full h-full flex justify-center content-stretch items-stretch flex-wrap my-3 px-3'
+      '2 w-full h-full flex content-around justify-around items-center flex-wrap my-3 px-3'
       ]"
+    ref="screenElement"
   >
     <div
       :class="['relative overflow-hidden flex border-2 border-gray-300 dark:border-gray-500 items-stretch ',
-            getWidth,
             currentVideo
             ? 'rounded-full h-16 grow-0'
-            : 'rounded-xl cursor-pointer gap-2 w-[1000px]'
+            : 'rounded-xl cursor-pointer'
           ]"
       v-for="interlocutor in interlocutors"
       :id="interlocutor!.code"
+      :key="interlocutor!.code"
     >
       <video
         @click.stop="handleExpandVideo"
-        class="block w-full object-cover"
-        :key="interlocutor!.code"
-        :id="interlocutor!.code"
+        class="block w-full h-full object-cover"
+        id="media"
         ref="videos"
         autoplay
         playsinline

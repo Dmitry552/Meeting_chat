@@ -13,5 +13,6 @@ export {};
 declare global {
   export interface Window {
     Echo: any;
+    converter: any;
   }
 }

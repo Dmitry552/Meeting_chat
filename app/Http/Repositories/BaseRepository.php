@@ -10,10 +10,11 @@ abstract class BaseRepository
     protected Model $model;
 
     /**
-     * @param $data
+     * @param array $data
+     * @param Model $model
      * @return LengthAwarePaginator
      */
-    public function index($data): LengthAwarePaginator
+    public function index(array $data, Model $model): LengthAwarePaginator
     {
         return $this->model::paginate($data['limit']);
     }

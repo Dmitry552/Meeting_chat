@@ -48,7 +48,7 @@ export default {
     forgot: 'Отправить ссылку',
     description: 'Мы вышлем вам ссылку для сброса пароля на этот адрес электронной почты!'
   },
-  countryName: {
-
+  textChat: {
+    typing: '{name} вводит сообщение'
   }
 }

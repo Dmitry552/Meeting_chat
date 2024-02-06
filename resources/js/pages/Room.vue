@@ -12,6 +12,7 @@ import {errorHandler} from "../utils/helpers";
 import {TCreateInterlocutorData} from "../store/modules/Interlocutor/types";
 import {TJoinRoomData} from "../store/modules/Room/types";
 import {setCurrentInterlocutor} from "../store/modules/Interlocutor/mutations";
+import useSocket from "../composables/useSocket";
 
 const store = useStore();
 const {params} = useRoute();
@@ -53,6 +54,8 @@ if (!localStorage.getItem('currentInterlocutor')) {
   await joinRoom(joinData);
 }
 
+useSocket(currentInterlocutor.value.code);
+
 await getRoom(params.id as string);
 await getInterlocutorsRoom(room.value.name);
 
@@ -87,36 +90,10 @@ function handleShowChat() {
 
 <template>
   <div
-    class="flex w-full h-full justify-between relative"
+    class="w-full h-full relative"
   >
-<!--    <client-list :showClientList="showClientList" @hidingClientList="handleShowClientList"/>-->
     <video-chat/>
     <text-chat :showChat="showChat" @hidingShowChat="handleShowChat"/>
-<!--    <div class="absolute left-0 top-3/4 h-full">-->
-<!--      <div-->
-<!--        @click="handleShowClientList"-->
-<!--        :class="['transition-all ease-in-out duration-300 relative h-14 w-32 bg-white rounded-r-full cursor-pointer',-->
-<!--            'flex items-center shadow-md shadow-gray-300 hover:bg-gray-300',-->
-<!--            'dark:bg-gray-600 dark:hover:bg-gray-700 dark:shadow-gray-700',-->
-<!--            showClientList ? '-translate-x-36' : '-translate-x-20 hover:-translate-x-16']"-->
-<!--      >-->
-<!--        <svg-->
-<!--          class="absolute w-6 h-full text-gray-500 dark:text-gray-300 right-4"-->
-<!--          aria-hidden="true"-->
-<!--          xmlns="http://www.w3.org/2000/svg"-->
-<!--          fill="none"-->
-<!--          viewBox="0 0 17 14"-->
-<!--        >-->
-<!--          <path-->
-<!--            stroke="currentColor"-->
-<!--            stroke-linecap="round"-->
-<!--            stroke-linejoin="round"-->
-<!--            stroke-width="2"-->
-<!--            d="M1 1h15M1 7h15M1 13h15"-->
-<!--          />-->
-<!--        </svg>-->
-<!--      </div>-->
-<!--    </div>-->
     <div class="absolute right-0 top-3/4 h-full">
       <div
         @click="handleShowChat"

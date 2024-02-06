@@ -46,6 +46,14 @@ export type Client = {
   name: string,
 } | null
 
+export type Message = {
+  id: number,
+  interlocutor: Interlocutor | null,
+  content: string,
+  created_at: string,
+  updated_at: string
+}
+
 export type Clients = Client[];
 
 export type TDevice = NoReadonly<Omit<MediaDeviceInfo, 'toJSON'>>;

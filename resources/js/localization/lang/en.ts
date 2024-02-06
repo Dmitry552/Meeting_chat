@@ -47,5 +47,8 @@ export default {
     'forgot password': 'Forgot your password?',
     forgot: 'Send link',
     description: 'We will send you a link to reset your password to this email address!'
+  },
+  textChat: {
+    typing: '{name} enters message'
   }
 };

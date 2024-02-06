@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
              UserAvatarSeeder::class,
              //SystemUserSeeder::class,
              InterlocutorSeeder::class,
-             RoomSeeder::class
+             RoomSeeder::class,
+             MessageSeeder::class
          ]);
     }
 }

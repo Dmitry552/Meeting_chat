@@ -109,6 +109,6 @@
   "include": [
     "resources/js/**/*",
     "resources/js/typings/modules.d.ts",
-    "components.d.ts"
+    "components.d.ts",
   ]
 }

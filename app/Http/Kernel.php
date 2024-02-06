@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\Interlocutor;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -65,6 +64,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'interlocutor' => \App\Http\Middleware\Interlocutor::class
+        'interlocutor' => \App\Http\Middleware\Interlocutor::class,
+        'privateChannel' => \App\Http\Middleware\PrivateChannel::class
     ];
 }

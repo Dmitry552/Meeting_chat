@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import Components from 'unplugin-vue-components/vite';
 import { UnpluginVueComponentsResolver } from 'maz-ui/resolvers';
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 
 export default defineConfig({
   plugins: [

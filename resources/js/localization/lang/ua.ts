@@ -42,5 +42,8 @@ export default {
   reset: {
     'reset password': 'Скидання пароля',
     reset: 'Скинути'
+  },
+  textChat: {
+    typing: '{name} вводить повідомлення'
   }
 }

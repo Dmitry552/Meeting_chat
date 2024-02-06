@@ -100,7 +100,7 @@ const getWidth = computed<string>(() => {
 
 <template>
   <div
-    class="mt-[43px] w-full flex flex-col items-end relative"
+    class="pt-[43px] w-full h-full flex flex-col items-end relative"
   >
     <div
       v-show="currentVideo"

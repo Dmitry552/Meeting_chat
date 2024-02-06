@@ -464,6 +464,7 @@ export default function useWebRTC() {
   }, {
     deep: true
   });
+
   window.Echo.channel(`videoMeeting.${room.value.name}`)
     .listen(
       `.${ACTIONS.REMOVE_PEER}`,

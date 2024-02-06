@@ -44,6 +44,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'interlocutor' => [
+            'driver' => 'jwt',
+            'provider' => 'interlocutor',
+        ],
     ],
 
     /*
@@ -70,8 +74,12 @@ return [
         ],
         'admin' => [
              'driver' => 'eloquent',
-             'table' => App\Models\SystemUsers::class,
+             'model' => App\Models\SystemUsers::class,
          ],
+        'interlocutor' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Interlocutor::class,
+        ],
     ],
 
     /*

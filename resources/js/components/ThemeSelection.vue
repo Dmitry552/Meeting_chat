@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {ref, watch} from "vue";
+import {setTheme} from "../store/modules/Global/mutations";
 
 const theme = ref<string>('');
 
@@ -9,13 +10,16 @@ function handleThemeSelection(): void {
 
 if (localStorage.theme === 'dark') {
   document.documentElement.classList.add('dark');
+  setTheme('dark');
   theme.value = 'light';
 } else if ((!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
   document.documentElement.classList.add('dark');
+  setTheme('dark');
   localStorage.setItem('theme', 'dark');
   theme.value = 'light';
 } else {
   document.documentElement.classList.remove('dark');
+  setTheme('light');
   localStorage.setItem('theme', 'light');
   theme.value = 'dark';
 }
@@ -23,9 +27,11 @@ if (localStorage.theme === 'dark') {
 watch<string>(theme, (value, oldValue) => {
   if (oldValue === 'dark') {
     document.documentElement.classList.add('dark');
+    setTheme('dark');
     localStorage.setItem('theme', 'dark');
   } else {
     document.documentElement.classList.remove('dark');
+    setTheme('light');
     localStorage.setItem('theme', 'light');
   }
 })

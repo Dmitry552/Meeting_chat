@@ -59,14 +59,19 @@ Route::middleware([
         Route::get('/{user}', [UserController::class, 'show']);
         Route::post('logout', [AuthUserController::class, 'logout']);
         Route::post('refresh', [AuthUserController::class, 'refresh']);
-        Route::post('avatar', [UserController::class, 'avatar']); //TODO: add to swagger
-        Route::post('password/{user}', [UserController::class, 'password']); //TODO: add to swagger
+        Route::post('avatar', [UserController::class, 'avatar']);
+        Route::post('password/{user}', [UserController::class, 'password']);
         Route::put('/{user}', [UserController::class, 'update']);
-        Route::delete('avatar', [UserController::class, 'destroyAvatar']); //TODO: add to swagger
+        Route::delete('avatar', [UserController::class, 'destroyAvatar']);
         Route::delete('/{user}', [UserController::class, 'destroy']);
 });
 
 Route::prefix('videoChat')
     ->group(function () {
         require __DIR__ ."/channels/videoChat/videoChat.php";
+    });
+
+Route::prefix('textChat')
+    ->group(function () {
+        require __DIR__ ."/channels/textChat/textChat.php";
     });
