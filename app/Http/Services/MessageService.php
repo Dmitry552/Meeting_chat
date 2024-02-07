@@ -21,13 +21,15 @@ class MessageService
     /**
      * @param array $data
      * @param Room $room
-     * @return AnonymousResourceCollection
+     * @return array
      */
-    public function getMessages(array $data, Room $room): AnonymousResourceCollection
+    public function getMessages(array $data, Room $room): array
     {
         $messages = $this->repository->index($data, $room);
 
-        return MessageResource::collection($messages);
+        return [
+            'data' => MessageResource::collection($messages)
+        ];
     }
 
     public function create(array $data, Interlocutor $interlocutor): MessageResource
