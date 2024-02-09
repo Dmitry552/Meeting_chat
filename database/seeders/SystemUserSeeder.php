@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\SystemUsers;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\SystemUser;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -16,11 +15,11 @@ class SystemUserSeeder extends Seeder
      */
     public function run()
     {
-        SystemUsers::factory()->create([
+        SystemUser::factory()->create([
             'name' => 'TestSystemUser',
             'email' => '12345@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2a$12$STAEX0v/6qnvXzTi4obBG.pW6nu9QfFTrUDcGGPZHHzzJ916KIbQO', // 12345678
+            'password' => '123456781',
             'remember_token' => Str::random(10),
         ]);
     }

@@ -16,11 +16,27 @@ use Illuminate\Http\JsonResponse;
 
 class UserController extends BaseUserController
 {
+    /**
+     * PERMISSION_YYYY_DDDD_AAAA = 'pesmision yyyy dddd aaaa'
+     *
+     * YYYY(yyyy) - who is doing
+     * DDDD(dddd) - where does it do
+     * AAAA(aaaa) - what is he doing
+     */
+    public const PERMISSION_SYSTEM_USER_INDEX = 'permission system user index';
+    public const PERMISSION_SYSTEM_USER_SHOW = 'permission system user show';
+    public const PERMISSION_SYSTEM_USER_DESTROY = 'permission system user destroy';
+    public const PERMISSION_USER_USERS_SHOW = 'permission user users show';
+    public const PERMISSION_USER_USERS_UPDATE = 'permission user users update';
+    public const PERMISSION_USER_USERS_DESTROY = 'permission user users destroy';
+
     private UserService $service;
 
     public function __construct(UserService $service)
     {
         $this->service = $service;
+
+        $this->authorizeResource(User::class);
     }
 
     public function index(UserGetRequest $request): JsonResponse
@@ -89,5 +105,16 @@ class UserController extends BaseUserController
         $this->service->password($request->all(), $user);
 
         response()->noContent();
+    }
+
+    protected function resourceAbilityMap(): array
+    {
+        return [
+            'index' => 'systemIndex',
+            'show' => 'show',
+            'store' => 'create',
+            'update' => 'update',
+            'destroy' => 'delete',
+        ];
     }
 }

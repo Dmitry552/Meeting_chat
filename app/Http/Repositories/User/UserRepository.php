@@ -4,6 +4,8 @@ namespace App\Http\Repositories\User;
 
 use \App\Http\Repositories\BaseRepository;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository extends BaseRepository
 {
@@ -22,5 +24,15 @@ class UserRepository extends BaseRepository
         $user = $this->model->query()->where('email', $email)->first();
 
         return $user;
+    }
+
+    /**
+     * @param array $data
+     * @param Model|null $model
+     * @return LengthAwarePaginator
+     */
+    public function index(array $data, Model $model = null): LengthAwarePaginator
+    {
+        return $this->model::with('roles')->paginate($data['limit']);
     }
 }

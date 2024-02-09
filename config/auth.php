@@ -36,13 +36,13 @@ return [
     */
 
     'guards' => [
-        'admin' => [
-            'driver' => 'jwt',
-            'provider' => 'admin',
-        ],
         'user' => [
             'driver' => 'jwt',
             'provider' => 'users',
+        ],
+        'admin' => [
+            'driver' => 'jwt',
+            'provider' => 'admin',
         ],
         'interlocutor' => [
             'driver' => 'jwt',
@@ -74,7 +74,7 @@ return [
         ],
         'admin' => [
              'driver' => 'eloquent',
-             'model' => App\Models\SystemUsers::class,
+             'model' => App\Models\SystemUser::class,
          ],
         'interlocutor' => [
             'driver' => 'eloquent',

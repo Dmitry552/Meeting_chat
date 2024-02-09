@@ -17,10 +17,10 @@ class MessageRepository extends BaseRepository
 
     /**
      * @param array $data
-     * @param Model $model
+     * @param Model|null $model
      * @return LengthAwarePaginator
      */
-    public function index(array $data, Model $model): LengthAwarePaginator
+    public function index(array $data, Model $model = null): LengthAwarePaginator
     {
         /** @var Room $model */
         return $model->messages()->paginate($data['limit']);

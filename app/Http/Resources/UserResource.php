@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'birthday' => $this->birthday,
             'email_verified' => isset($this->emil_verified_at),
             'avatarPath' => $this->avatarPath ? asset('storage/'.$this->avatarPath) : null,
+            'roles' => $this->roles()->pluck('name'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

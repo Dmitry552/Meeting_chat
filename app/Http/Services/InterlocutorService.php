@@ -6,7 +6,7 @@ use App\Http\Repositories\Interlocutor\InterlocutorRepository;
 use App\Http\Resources\InterlocutorResource;
 use App\Models\Interlocutor;
 use App\Models\Room;
-use App\Models\SystemUsers;
+use App\Models\SystemUser;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
@@ -42,7 +42,7 @@ class InterlocutorService
     {
         $data = ['code' => Str::uuid()];
 
-        /** @var User | SystemUsers $user */
+        /** @var User | SystemUser $user */
         $user = auth()->user();
 
         if ($user) {

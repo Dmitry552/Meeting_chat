@@ -50,7 +50,7 @@ Route::get('/room/interlocutors/{room:name}', [InterlocutorController::class, 'i
 Route::get('/room/join/{room:name}/{interlocutor}', [RoomController::class, 'joinRoom']);
 
 Route::middleware([
-    'auth:user',
+    'auth:admin,user',
 ])
     ->prefix('user')
     ->group(function () {
@@ -65,6 +65,14 @@ Route::middleware([
         Route::delete('avatar', [UserController::class, 'destroyAvatar']);
         Route::delete('/{user}', [UserController::class, 'destroy']);
 });
+
+Route::middleware([
+    'auth:system',
+])
+    ->prefix('admin')
+    ->group(function () {
+
+    });
 
 Route::prefix('videoChat')
     ->group(function () {

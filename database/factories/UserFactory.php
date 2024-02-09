@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'birthday' => fake()->date(),
             'email_verified_at' => now(),
             'avatarPath' => null,
-            'password' => 'password',
+            'password' => 'password1',
             'remember_token' => Str::random(10),
         ];
     }

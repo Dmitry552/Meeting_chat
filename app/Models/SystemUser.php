@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class SystemUsers extends Model implements JWTSubject
+class SystemUser extends Model implements JWTSubject
 {
     use HasApiTokens;
     use HasFactory;
@@ -31,16 +31,6 @@ class SystemUsers extends Model implements JWTSubject
      */
     protected $hidden = [
         'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
     ];
 
     /**
