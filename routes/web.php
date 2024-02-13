@@ -30,5 +30,3 @@ Route::get('{path}', function () {
 Route::get('password/reset/{token}', function () {
     return view('index');
 })->name('password.reset');
-
-

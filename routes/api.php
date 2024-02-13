@@ -67,7 +67,7 @@ Route::middleware([
 });
 
 Route::middleware([
-    'auth:system',
+    'auth:admin',
 ])
     ->prefix('admin')
     ->group(function () {

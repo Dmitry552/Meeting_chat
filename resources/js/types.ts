@@ -10,9 +10,12 @@ export type User = {
   avatarPath: string,
   email: string,
   email_verified: string,
+  roles: Role[],
   created_at: string,
   updated_at: string
 };
+
+export type Role = 'user' | 'admin' | 'super-admin';
 
 export type Interlocutor = {
   id: number,

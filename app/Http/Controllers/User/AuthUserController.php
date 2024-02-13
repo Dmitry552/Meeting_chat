@@ -21,9 +21,9 @@ class AuthUserController extends BaseUserController
      * Get a JWT via given credentials.
      *
      * @param UserLoginRequest $request
-     * @return JsonResponse
+     * @return array|JsonResponse
      */
-    public function login(UserLoginRequest $request): JsonResponse
+    public function login(UserLoginRequest $request): JsonResponse | array
     {
         return $this->service->login($request->all());
     }

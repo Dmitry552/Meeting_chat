@@ -8,6 +8,15 @@ import Components from 'unplugin-vue-components/vite';
 import { UnpluginVueComponentsResolver } from 'maz-ui/resolvers';
 
 export default defineConfig({
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       // Глобальные SCSS переменные и миксины
+  //       // Укажите путь к вашему файлу со стилями, которые хотите сделать глобальными
+  //       additionalData: `@import "./resources/saas/light-bootstrap-dashboard.scss";`
+  //     }
+  //   }
+  // },
   plugins: [
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.ts'],

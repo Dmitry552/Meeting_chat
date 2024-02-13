@@ -1,7 +1,8 @@
 
 export enum LayoutsName {
   LOGIN = 'login',
-  MAIN = 'main'
+  MAIN = 'main',
+  BLANK = 'blank'
 }
 
 type TLowercaseLayoutsName<T> = {

@@ -7,9 +7,18 @@ import ResetPassword from "../pages/ResetPassword.vue";
 import ForgotPassword from "../pages/ForgotPassword.vue";
 import User from '../pages/User.vue';
 import Exception from '../pages/Exception.vue';
+import Overview from "../pages/Admin/Overview.vue";
+import UserProfile from "../pages/Admin/UserProfile.vue";
+import TableList from "../pages/Admin/TableList.vue";
+import Typography from "../pages/Admin/Typography.vue";
+import Icons from "../pages/Admin/Icons.vue";
+import Notifications from "../pages/Admin/Notifications.vue";
+import Upgrade from "../pages/Admin/Upgrade.vue";
+import DashboardLayout from "../layouts/Admin/DashboardLayout.vue";
 import {NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw} from "vue-router";
 import {LayoutsName, TLayoutsName} from "./types";
 import {store} from '../store';
+import {Role} from "../types";
 
 type TRoutes = {
   meta?: {
@@ -58,6 +67,52 @@ const routes: TRoutes[] = [
     component: ResetPassword
   },
   {
+    path: '/admin',
+    component: DashboardLayout,
+    redirect: '/admin/overview',
+    //beforeEnter: [checkAdminRole],
+    meta: {
+      layout: LayoutsName.BLANK
+    },
+    children: [
+      {
+        path: 'overview',
+        name: 'Overview',
+        component: Overview
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: UserProfile
+      },
+      {
+        path: 'table-list',
+        name: 'Table List',
+        component: TableList
+      },
+      {
+        path: 'typography',
+        name: 'Typography',
+        component: Typography
+      },
+      {
+        path: 'icons',
+        name: 'Icons',
+        component: Icons
+      },
+      {
+        path: 'notifications',
+        name: 'Notifications',
+        component: Notifications
+      },
+      {
+        path: 'upgrade',
+        name: 'Upgrade to PRO',
+        component: Upgrade
+      }
+    ]
+  },
+  {
     path: '/:catchAll(.*)',
     component: NotFound
   }
@@ -72,6 +127,19 @@ function checkAuthorizedUser(
     next({path: '/sign-in'});
   } else {
     next();
+  }
+}
+
+function checkAdminRole(
+  next: NavigationGuardNext
+) {
+  if (store.getters.getAuthUser
+    && (store.getters.getAuthUser.roles as string[]).find((role: Role) => {
+      return role === 'admin' || role === 'super-admin';
+    })) {
+    next();
+  } else {
+    next({path: '/sign-in'});
   }
 }
 
