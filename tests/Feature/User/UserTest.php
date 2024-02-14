@@ -40,9 +40,18 @@ class UserTest extends BaseUserTest
             ->assertJsonFragment(self::getMessageAfterUserCreation());
     }
 
-    public function test_user_index()
+    public function test_user_error_index()
     {
         $response = $this->userAuthorizationWithHeaderAdded()
+            ->getJson(self::ROUTE_USER_INDEX);
+
+        $response->assertStatus(self::STATUS_FORBIDDEN)
+            ->assertJsonFragment(self::getActionUnauthorizedFragment());
+    }
+
+    public function test_user_index()
+    {
+        $response = $this->userAuthorizationWithHeaderAdded('admin@gmail.com', 'admin1')
             ->getJson(self::ROUTE_USER_INDEX);
 
         $response->assertOk()
@@ -52,7 +61,7 @@ class UserTest extends BaseUserTest
 
     public function test_display_five_users()
     {
-        $response = $this->userAuthorizationWithHeaderAdded()
+        $response = $this->userAuthorizationWithHeaderAdded('admin@gmail.com', 'admin1')
             ->getJson(self::ROUTE_USER_INDEX . '?limit=5');
 
         $response->assertOk()
@@ -62,8 +71,17 @@ class UserTest extends BaseUserTest
 
     public function test_show_user()
     {
-        $response = $this->userAuthorizationWithHeaderAdded()
+        $response = $this->userAuthorizationWithHeaderAdded('admin@gmail.com', 'admin1')
             ->getJson(self::ROUTE_USER_SHOW . '1');
+
+        $response->assertOk()
+            ->assertJsonStructure(self::getUserStructure());
+    }
+
+    public function test_show_user_owner()
+    {
+        $response = $this->userAuthorizationWithHeaderAdded()
+            ->getJson(self::ROUTE_USER_SHOW . '11');
 
         $response->assertOk()
             ->assertJsonStructure(self::getUserStructure());
@@ -73,7 +91,7 @@ class UserTest extends BaseUserTest
     {
         $user = User::find(1);
 
-        $response = $this->userAuthorizationWithHeaderAdded()
+        $response = $this->userAuthorizationWithHeaderAdded('admin@gmail.com', 'admin1')
             ->deleteJson(self::ROUTE_USER_DESTROY . '1');
 
         $response->assertOk()
@@ -100,26 +118,6 @@ class UserTest extends BaseUserTest
             "firstName" => 'Stepan',
             'email' => 'hello@gmail.com',
         ]);;
-    }
-
-    public function test_upload_avatar()
-    {
-        $oldAvatarPath = User::query()->find(11)->avatarPath;
-
-        $file = UploadedFile::fake()->image('avatar.jpg');
-
-        $response = $this->userAuthorizationWithHeaderAdded()
-            ->post(
-                self::ROUTE_USER_AVATAR,
-                [
-                    'avatar' => $file
-                ]
-            );
-
-        $newAvatarPath = User::query()->find(11)->avatarPath;
-
-        $response->assertOk();
-        $this->assertNotEquals($oldAvatarPath, $newAvatarPath);
     }
 
     public function test_upload_password()

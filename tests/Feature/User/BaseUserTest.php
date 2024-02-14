@@ -41,7 +41,7 @@ abstract class BaseUserTest extends TestCase
         ];
     }
 
-    protected function getUnauthorizedfragment(): array
+    protected function getUnauthorizedFragment(): array
     {
         return [
             'error' => 'Unauthorized'
@@ -86,6 +86,13 @@ abstract class BaseUserTest extends TestCase
     /**
      * Methods user
      */
+    protected function getActionUnauthorizedFragment(): array
+    {
+        return [
+            'message' => 'This action is unauthorized.'
+        ];
+    }
+
     protected function getUsersStructure(): array
     {
         return [

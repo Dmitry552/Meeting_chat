@@ -13,17 +13,9 @@ use Laravel\Socialite\AbstractUser;
 use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class AuthService extends BaseAuthService
+class AuthService
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    public function getGuard(): string
-    {
-        return 'user';
-    }
+    private string $guard = 'user';
 
     public function login(User|array $data): JsonResponse | array
     {
@@ -55,6 +47,16 @@ class AuthService extends BaseAuthService
         auth($this->guard)->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function refresh(): JsonResponse
+    {
+        return response()->json($this->respondWithToken(auth($this->guard)->refresh()));
+    }
+
+    public function me(): JsonResponse
+    {
+        return response()->json(new UserResource(auth($this->guard)->user()));
     }
 
     public function forgotPassword(array $data): JsonResponse
@@ -96,6 +98,11 @@ class AuthService extends BaseAuthService
         $token = $data['token'] ?? null;
         $code = $data['code'] ?? null; //TODO: Add code processing
 
+        if ($code) {
+            $responseToken = Socialite::driver($provider)->stateless()->getAccessTokenResponse($code);
+            $token = Arr::get($responseToken, 'access_token');
+        }
+
         /**
          * @var AbstractUser $providerUser
          */
@@ -107,6 +114,15 @@ class AuthService extends BaseAuthService
             'name' => $providerUser->getName(),
             'avatar' => $providerUser->getAvatar(),
             'raw' => $providerUser->getRaw(),
+        ];
+    }
+
+    private function respondWithToken(string $token): array
+    {
+        return [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth($this->guard)->factory()->getTTL() * 60
         ];
     }
 }

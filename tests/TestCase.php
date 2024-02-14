@@ -12,18 +12,6 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     use RefreshDatabase;
 
-    protected function tearDown(): void
-    {
-        DB::table('users')->get()->each(function ($user) {
-            $avatarPath = $user->avatarPath ?: '';
-            if (Storage::exists($avatarPath)) {
-                Storage::delete($avatarPath);
-            }
-        });
-
-        parent::tearDown();
-    }
-
     protected bool $seed = true;
 
     /**

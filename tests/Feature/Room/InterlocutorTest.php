@@ -38,14 +38,14 @@ class InterlocutorTest extends BaseRoomTest
 
     public function test_destroy_interlocutor()
     {
-        $interlocutor = Interlocutor::find(1);
+        $interlocutor = Interlocutor::query()->find(1);
 
         $response = $this->deleteJson(self::ROUTE_INTERLOCUTOR_DESTROY . $interlocutor->code);
 
         $response->assertOk()
             ->assertJsonStructure(self::getInterlocutorStructure());
 
-        $this->assertModelMissing($interlocutor);
+        $this->assertSoftDeleted($interlocutor);
     }
 
     public function test_interlocutor_show()

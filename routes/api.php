@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\SystemRoomController;
 use App\Http\Controllers\User\AuthUserController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -41,16 +42,27 @@ Route::middleware([
         Route::get('/{interlocutor:code}', [InterlocutorController::class, 'show']);
         Route::post('/', [InterlocutorController::class, 'store']);
         Route::delete('/{interlocutor:code}', [InterlocutorController::class, 'destroy']);
-});
+    });
 
-Route::post('/room/{interlocutor}', [RoomController::class, 'store']);
-Route::get('/room/{room:name}', [RoomController::class, 'show']);
-Route::get('/room/check/{name}', [RoomController::class, 'check']);
-Route::get('/room/interlocutors/{room:name}', [InterlocutorController::class, 'interlocutorsRoom']);
-Route::get('/room/join/{room:name}/{interlocutor}', [RoomController::class, 'joinRoom']);
+Route::prefix('room')
+    ->group(function () {
+        Route::post('/{interlocutor}', [RoomController::class, 'store']);
+        Route::get('/{room:name}', [RoomController::class, 'show']);
+        Route::get('/check/{name}', [RoomController::class, 'check']);
+        Route::get('/interlocutors/{room:name}', [InterlocutorController::class, 'interlocutorsRoom']);
+        Route::get('/join/{room:name}/{interlocutor}', [RoomController::class, 'joinRoom']);
+    });
 
 Route::middleware([
-    'auth:admin,user',
+    'auth:user'
+])
+    ->prefix('room')
+    ->group(function () {
+        Route::get('/', [SystemRoomController::class, 'getRoomsBetweenDates']);
+    });
+
+Route::middleware([
+    'auth:user',
 ])
     ->prefix('user')
     ->group(function () {
@@ -64,14 +76,6 @@ Route::middleware([
         Route::put('/{user}', [UserController::class, 'update']);
         Route::delete('avatar', [UserController::class, 'destroyAvatar']);
         Route::delete('/{user}', [UserController::class, 'destroy']);
-});
-
-Route::middleware([
-    'auth:admin',
-])
-    ->prefix('admin')
-    ->group(function () {
-
     });
 
 Route::prefix('videoChat')

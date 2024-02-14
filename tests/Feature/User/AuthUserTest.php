@@ -85,7 +85,7 @@ class AuthUserTest extends BaseUserTest
         );
 
         $response->assertStatus(self::STATUS_UNAUTHORIZED)
-            ->assertJsonFragment(self::getUnauthorizedfragment());
+            ->assertJsonFragment(self::getUnauthorizedFragment());
     }
 
     public function test_user_login()

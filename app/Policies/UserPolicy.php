@@ -32,7 +32,10 @@ class UserPolicy
     {
         if ($user->checkPermissionTo(UserController::PERMISSION_SYSTEM_USER_SHOW)) {
             return true;
-        } elseif ($user->id === $model->id) {
+        } elseif (
+            $user->checkPermissionTo(UserController::PERMISSION_USER_USERS_SHOW)
+            && $user->id === $model->id
+        ) {
             return true;
         }
 
@@ -59,7 +62,9 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        if ($user->id === $model->id) {
+        if ($user->checkPermissionTo(UserController::PERMISSION_USER_USERS_UPDATE)
+            && $user->id === $model->id
+        ) {
             return true;
         }
 
@@ -77,7 +82,8 @@ class UserPolicy
     {
         if ($user->checkPermissionTo(UserController::PERMISSION_SYSTEM_USER_DESTROY)) {
             return true;
-        } elseif ($user->id === $model->id) {
+        } elseif ($user->checkPermissionTo(UserController::PERMISSION_USER_USERS_DESTROY)
+            && $user->id === $model->id) {
             return true;
         }
 

@@ -123,6 +123,6 @@ class VideoChatTest extends BaseRoomTest
 
         $response->assertOk();
 
-        $this->assertModelMissing($this->interlocutor);
+        $this->assertSoftDeleted($this->interlocutor);
     }
 }

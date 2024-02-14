@@ -53,7 +53,7 @@ abstract class BaseRoomTest extends TestCase
     protected function getInterlocutorsStructure(): array
     {
         return [
-            '*' => [
+            'data' => [
                 '*' => [
                     $this->getInterlocutorStructure()
                 ]

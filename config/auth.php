@@ -40,10 +40,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
-        'admin' => [
-            'driver' => 'jwt',
-            'provider' => 'admin',
-        ],
+//        'admin' => [
+//            'driver' => 'jwt',
+//            'provider' => 'admin',
+//        ],
         'interlocutor' => [
             'driver' => 'jwt',
             'provider' => 'interlocutor',
@@ -72,10 +72,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'admin' => [
-             'driver' => 'eloquent',
-             'model' => App\Models\SystemUser::class,
-         ],
+//        'admin' => [
+//             'driver' => 'eloquent',
+//             'model' => App\Models\SystemUser::class,
+//         ],
         'interlocutor' => [
             'driver' => 'eloquent',
             'model' => App\Models\Interlocutor::class,
@@ -103,11 +103,11 @@ return [
             'table' => 'user_password_resets',
             'expire' => 60,
         ],
-        'admin' => [
-            'provider' => 'admin',
-            'table' => 'admin_password_resets',
-            'expire' => 60,
-        ],
+//        'admin' => [
+//            'provider' => 'admin',
+//            'table' => 'admin_password_resets',
+//            'expire' => 60,
+//        ],
     ],
 
     /*
