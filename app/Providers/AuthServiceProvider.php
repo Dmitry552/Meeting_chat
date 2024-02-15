@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Room;
 use App\Models\User;
+use App\Policies\System\RoomPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -17,7 +19,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        User::class => UserPolicy::class
+        User::class => UserPolicy::class,
+        Room::class => RoomPolicy::class,
     ];
 
     /**

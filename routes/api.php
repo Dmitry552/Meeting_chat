@@ -58,7 +58,7 @@ Route::middleware([
 ])
     ->prefix('room')
     ->group(function () {
-        Route::get('/', [SystemRoomController::class, 'getRoomsBetweenDates']);
+        Route::get('/roomsBetweenDates', [SystemRoomController::class, 'getRoomsBetweenDates']);
     });
 
 Route::middleware([

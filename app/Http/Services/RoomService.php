@@ -6,6 +6,7 @@ use App\Http\Repositories\Room\RoomRepository;
 use App\Http\Resources\RoomResource;
 use App\Models\Interlocutor;
 use App\Models\Room;
+use Illuminate\Support\Collection;
 
 class RoomService
 {
@@ -54,5 +55,10 @@ class RoomService
     public function joinRoom(Room $room, Interlocutor $interlocutor): RoomResource
     {
         return new RoomResource($this->repository->join($room, $interlocutor));
+    }
+
+    public function getRoomsBetweenDates(array $data): Collection
+    {
+        return $this->repository->roomsBetweenDates($data);
     }
 }
