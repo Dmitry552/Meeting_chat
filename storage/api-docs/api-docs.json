@@ -12,6 +12,462 @@
         }
     ],
     "paths": {
+        "/interlocutor/{interlocutorCode}": {
+            "get": {
+                "tags": [
+                    "Interlocutors"
+                ],
+                "summary": "Show interlocutor",
+                "description": "Show interlocutor",
+                "operationId": "interlocutor",
+                "parameters": [
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetInterlocutor"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/interlocutor": {
+            "get": {
+                "tags": [
+                    "Interlocutors"
+                ],
+                "summary": "Displays interlocutors",
+                "description": "Displays interlocutors - with oneOf examples",
+                "operationId": "displays_interlocutors",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "A list of things.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response_index_interlocutors"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/interlocutor/{id}": {
+            "delete": {
+                "tags": [
+                    "Interlocutors"
+                ],
+                "summary": "Destroy interlocutor",
+                "description": "Destroy interlocutor",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Parameter with mutliple examples",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetInterlocutor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "message": "No query results for model [App\\Models\\Interlocutor] 20."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/room/{roomName}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Show room",
+                "description": "Show room",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetRoom"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/room/check/{name}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Show room",
+                "description": "Show room",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "text/html": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "example": "0"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/interlocutors/{roomName}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Displays room interlocutors",
+                "description": "Displays room interlocutors",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response_room_interlocutors"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/join/{roomName}/{interlocutorCode}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Join the room",
+                "description": "Join the room",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                }
+            }
+        },
+        "/room/{interlocutorCode}": {
+            "post": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Adds a new room",
+                "description": "Adds a new room",
+                "parameters": [
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Room name",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "name": "dd39ff46-62c7-362b-959c-0cef01be272d"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                }
+            }
+        },
+        "/textChat/{roomName}": {
+            "get": {
+                "tags": [
+                    "TextChat"
+                ],
+                "summary": "Displays interlocutors",
+                "description": "Displays interlocutors - with oneOf examples",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "A list of things.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response_index_messages"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/textChat/message/{roomName}/{interlocutorCode}": {
+            "post": {
+                "tags": [
+                    "TextChat"
+                ],
+                "summary": "Create message",
+                "description": "Create message",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "content": "Test text"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/textChat/{id}": {
+            "delete": {
+                "tags": [
+                    "TextChat"
+                ],
+                "summary": "Destroy interlocutor",
+                "description": "Destroy interlocutor",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Message id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "examples": {
+                            "int": {
+                                "summary": "An int value.",
+                                "value": "1"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetMessage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "tags": [
@@ -24,19 +480,22 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "schema": "LoginUser",
                                 "properties": {
                                     "email": {
                                         "type": "string"
                                     },
                                     "password": {
                                         "type": "string"
+                                    },
+                                    "remember_me": {
+                                        "type": "boolean"
                                     }
                                 },
                                 "type": "object",
                                 "example": {
                                     "email": "12345@gmail.com",
-                                    "password": "12jhb345THjj678"
+                                    "password": "12jhb345THjj678",
+                                    "remember_me": false
                                 }
                             }
                         }
@@ -48,24 +507,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "schema": "ResponseOk_LoginUser",
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string"
-                                        },
-                                        "token_type": {
-                                            "type": "string"
-                                        },
-                                        "expires_in": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjk5NDM0NjI3LCJleHAiOjE2OTk0MzgyMjcsIm5iZiI6MTY5OTQzNDYyNywianRpIjoiaHNzeHVDZmJTUUd3QU85eCIsInN1YiI6IjExIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.V7B_I7bCT57x1kOV_1u9eQxscWAwAqW3Ae9oRvY62LM",
-                                        "token_type": "bearer",
-                                        "expires_in": 3600
-                                    }
+                                    "$ref": "#/components/schemas/Response_access_token"
                                 }
                             }
                         }
@@ -83,7 +525,6 @@
                                             "type": "object",
                                             "oneOf": [
                                                 {
-                                                    "schema": "ErrorsPasswordAndEmail",
                                                     "properties": {
                                                         "password": {
                                                             "type": "string"
@@ -95,7 +536,6 @@
                                                     "type": "object"
                                                 },
                                                 {
-                                                    "schema": "ErrorsPassword",
                                                     "properties": {
                                                         "password": {
                                                             "type": "string"
@@ -104,7 +544,6 @@
                                                     "type": "object"
                                                 },
                                                 {
-                                                    "schema": "ErrorsEmail",
                                                     "properties": {
                                                         "email": {
                                                             "type": "string"
@@ -131,7 +570,7 @@
                 }
             }
         },
-        "/create": {
+        "/registration": {
             "post": {
                 "tags": [
                     "Users"
@@ -143,7 +582,6 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "schema": "CreateUser",
                                 "properties": {
                                     "name": {
                                         "type": "string"
@@ -175,10 +613,30 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "schema": "",
                                     "properties": {
                                         "data": {
-                                            "type": "string"
+                                            "type": "object",
+                                            "allOf": [
+                                                {
+                                                    "properties": {
+                                                        "access_token": {
+                                                            "type": "string"
+                                                        },
+                                                        "token_type": {
+                                                            "type": "string"
+                                                        },
+                                                        "expires_in": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "example": {
+                                                        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjk5NDM0NjI3LCJleHAiOjE2OTk0MzgyMjcsIm5iZiI6MTY5OTQzNDYyNywianRpIjoiaHNzeHVDZmJTUUd3QU85eCIsInN1YiI6IjExIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.V7B_I7bCT57x1kOV_1u9eQxscWAwAqW3Ae9oRvY62LM",
+                                                        "token_type": "bearer",
+                                                        "expires_in": 3600
+                                                    }
+                                                }
+                                            ]
                                         },
                                         "message": {
                                             "type": "string"
@@ -207,7 +665,38 @@
                                             "type": "string"
                                         },
                                         "errors": {
-                                            "type": "object"
+                                            "type": "object",
+                                            "allOf": [
+                                                {
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "email": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "password": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "password_confirmation": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            ]
                                         }
                                     },
                                     "type": "object",
@@ -232,14 +721,75 @@
                 }
             }
         },
+        "/socialUserData": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Adds a new social user",
+                "description": "Adds a new user via social networks",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "properties": {
+                                            "provider": {
+                                                "type": "string"
+                                            },
+                                            "token": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "provider": "Google",
+                                            "token": "b9348gf93784fb938b4f8932bf8b2348fb23804fb0382b4f3f"
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "provider": {
+                                                "type": "string"
+                                            },
+                                            "code": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "provider": "Facebook",
+                                            "code": "12jhb345THjj678"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response_access_token"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Adds a new user - with oneOf examples",
-                "description": "Adds a new user",
-                "operationId": "addUser",
+                "summary": "Displays users - with oneOf examples",
+                "description": "Displays users",
+                "operationId": "indexUser",
                 "parameters": [
                     {
                         "name": "limit",
@@ -257,122 +807,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "name": {
-                                                        "type": "string"
-                                                    },
-                                                    "email_verified": {
-                                                        "type": "string"
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string"
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "links": {
-                                            "type": "object",
-                                            "allOf": [
-                                                {
-                                                    "properties": {
-                                                        "path": {
-                                                            "type": "string"
-                                                        },
-                                                        "firstPageUrl": {
-                                                            "type": "string"
-                                                        },
-                                                        "lastPageUrl": {
-                                                            "type": "string"
-                                                        },
-                                                        "nextPageUrl": {
-                                                            "type": "string"
-                                                        },
-                                                        "prevPageUrl": {
-                                                            "type": "string"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            ]
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "allOf": [
-                                                {
-                                                    "properties": {
-                                                        "currentPage": {
-                                                            "type": "integer"
-                                                        },
-                                                        "from": {
-                                                            "type": "integer"
-                                                        },
-                                                        "lastPage": {
-                                                            "type": "integer"
-                                                        },
-                                                        "perPage": {
-                                                            "type": "integer"
-                                                        },
-                                                        "to": {
-                                                            "type": "integer"
-                                                        },
-                                                        "total": {
-                                                            "type": "integer"
-                                                        },
-                                                        "count": {
-                                                            "type": "integer"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "data": [
-                                            {
-                                                "id": 1,
-                                                "name": "Prof. Rene Keeling Sr.",
-                                                "email_verified": false,
-                                                "created_at": "2023-11-06T15:34:03.000000Z",
-                                                "updated_at": "2023-11-06T15:34:03.000000Z"
-                                            },
-                                            {
-                                                "id": 2,
-                                                "name": "Hyman Harvey",
-                                                "email_verified": false,
-                                                "created_at": "2023-11-06T15:34:03.000000Z",
-                                                "updated_at": "2023-11-06T15:34:03.000000Z"
-                                            }
-                                        ],
-                                        "links": {
-                                            "path": "http://localhost:8000/api/user",
-                                            "firstPageUrl": "http://localhost:8000/api/user?page=1",
-                                            "lastPageUrl": "http://localhost:8000/api/user?page=2",
-                                            "nextPageUrl": "http://localhost:8000/api/user?page=2",
-                                            "prevPageUrl": null
-                                        },
-                                        "meta": {
-                                            "currentPage": 1,
-                                            "from": 1,
-                                            "lastPage": 2,
-                                            "perPage": 10,
-                                            "to": 10,
-                                            "total": 13,
-                                            "count": 10
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Response_index_users"
                                 }
                             }
                         }
@@ -382,130 +817,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/user/logout": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "User logout",
-                "description": "User logout",
-                "operationId": "logoutUser",
-                "responses": {
-                    "200": {
-                        "description": "Ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Successfully logged out"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/user/refresh": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Token reset",
-                "description": "Token reset",
-                "operationId": "refreshToken",
-                "responses": {
-                    "200": {
-                        "description": "Ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "schema": "ResponseOk_LoginUser",
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string"
-                                        },
-                                        "token_type": {
-                                            "type": "string"
-                                        },
-                                        "expires_in": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjk5NDM0NjI3LCJleHAiOjE2OTk0MzgyMjcsIm5iZiI6MTY5OTQzNDYyNywianRpIjoiaHNzeHVDZmJTUUd3QU85eCIsInN1YiI6IjExIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.V7B_I7bCT57x1kOV_1u9eQxscWAwAqW3Ae9oRvY62LM",
-                                        "token_type": "bearer",
-                                        "expires_in": 3600
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
+                                    "$ref": "#/components/schemas/Unauthenticated"
                                 }
                             }
                         }
@@ -532,31 +844,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "email_verified": {
-                                            "type": "boolean"
-                                        },
-                                        "created_at": {
-                                            "type": "string"
-                                        },
-                                        "updated_at": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "id": 1,
-                                        "name": "Prof. Rene Keeling Sr.",
-                                        "email_verified": false,
-                                        "created_at": "2023-11-06T15:34:03.000000Z",
-                                        "updated_at": "2023-11-06T15:34:03.000000Z"
-                                    }
+                                    "$ref": "#/components/schemas/GetUser"
                                 }
                             }
                         }
@@ -566,15 +854,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
+                                    "$ref": "#/components/schemas/Unauthenticated"
                                 }
                             }
                         }
@@ -592,23 +872,17 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Show user",
-                "description": "Show user",
-                "operationId": "ShowUser",
+                "summary": "Display user",
+                "description": "Display user",
+                "operationId": "User",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Parameter with mutliple examples",
+                        "description": "",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        },
-                        "examples": {
-                            "int": {
-                                "summary": "An int value.",
-                                "value": "1"
-                            }
+                            "type": "integer"
                         }
                     }
                 ],
@@ -618,31 +892,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "email_verified": {
-                                            "type": "boolean"
-                                        },
-                                        "created_at": {
-                                            "type": "string"
-                                        },
-                                        "updated_at": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "id": 1,
-                                        "name": "Prof. Rene Keeling Sr.",
-                                        "email_verified": false,
-                                        "created_at": "2023-11-06T15:34:03.000000Z",
-                                        "updated_at": "2023-11-06T15:34:03.000000Z"
-                                    }
+                                    "$ref": "#/components/schemas/GetUser"
                                 }
                             }
                         }
@@ -652,15 +902,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
+                                    "$ref": "#/components/schemas/Unauthenticated"
                                 }
                             }
                         }
@@ -723,31 +965,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "email_verified": {
-                                            "type": "boolean"
-                                        },
-                                        "created_at": {
-                                            "type": "string"
-                                        },
-                                        "updated_at": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "id": 1,
-                                        "name": "Prof. Rene Keeling Sr.",
-                                        "email_verified": false,
-                                        "created_at": "2023-11-06T15:34:03.000000Z",
-                                        "updated_at": "2023-11-06T15:34:03.000000Z"
-                                    }
+                                    "$ref": "#/components/schemas/GetUser"
                                 }
                             }
                         }
@@ -757,15 +975,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
+                                    "$ref": "#/components/schemas/Unauthenticated"
                                 }
                             }
                         }
@@ -800,7 +1010,7 @@
                     "Users"
                 ],
                 "summary": "Destroy user",
-                "description": "SDestroy user",
+                "description": "Destroy user",
                 "operationId": "DestroyUser",
                 "parameters": [
                     {
@@ -825,31 +1035,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "email_verified": {
-                                            "type": "boolean"
-                                        },
-                                        "created_at": {
-                                            "type": "string"
-                                        },
-                                        "updated_at": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "id": 1,
-                                        "name": "Prof. Rene Keeling Sr.",
-                                        "email_verified": false,
-                                        "created_at": "2023-11-06T15:34:03.000000Z",
-                                        "updated_at": "2023-11-06T15:34:03.000000Z"
-                                    }
+                                    "$ref": "#/components/schemas/GetUser"
                                 }
                             }
                         }
@@ -859,15 +1045,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object",
-                                    "example": {
-                                        "message": "Unauthenticated."
-                                    }
+                                    "$ref": "#/components/schemas/Unauthenticated"
                                 }
                             }
                         }
@@ -897,9 +1075,1083 @@
                     }
                 ]
             }
+        },
+        "/user/logout": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User logout",
+                "description": "User logout",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Successfully logged out"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/refresh": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Token reset",
+                "description": "Token reset",
+                "operationId": "refreshToken",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response_access_token"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/password/{id}": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Password change",
+                "description": "Password change",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "user id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "oldPassword": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "oldPassword": "12345678",
+                                    "password": "12345678qwerty"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/avatar": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Upload avatar",
+                "description": "Upload an avatar for the user",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "avatar": "111.png"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUser"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Error update user"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Destroy user avatar",
+                "description": "Destroy user avatar",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUser"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Error update user"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/videoChat/join/{roomName}/{interlocutorCode}": {
+            "get": {
+                "tags": [
+                    "VideoChat"
+                ],
+                "summary": "Join the room",
+                "description": "Notice of the entrance to the room",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/videoChat/leave/{roomName}/{interlocutorCode}": {
+            "get": {
+                "tags": [
+                    "VideoChat"
+                ],
+                "summary": "Leave the room",
+                "description": "Notification to leave the room",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/videoChat/relayIce/{roomName}/{interlocutorCode}": {
+            "post": {
+                "tags": [
+                    "VideoChat"
+                ],
+                "summary": "Transfer ice candidate",
+                "description": "Transfer ice candidate",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "iceCandidate": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/videoChat/relaySdp/{roomName}/{interlocutorCode}": {
+            "post": {
+                "tags": [
+                    "VideoChat"
+                ],
+                "summary": "SDP data transfer",
+                "description": "SDP data transfer (streams, media data)",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "sessionDescription": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/videoChat/mute/{roomName}/{interlocutorCode}": {
+            "post": {
+                "tags": [
+                    "VideoChat"
+                ],
+                "summary": "Notify muting",
+                "description": "Notify when audio or video is muted",
+                "parameters": [
+                    {
+                        "name": "roomName",
+                        "in": "path",
+                        "description": "Room name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "interlocutorCode",
+                        "in": "path",
+                        "description": "Interlocutor code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "properties": {
+                                            "value": {
+                                                "type": "boolean"
+                                            },
+                                            "key": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "value": true,
+                                            "key": "audio"
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "value": {
+                                                "type": "boolean"
+                                            },
+                                            "key": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "value": false,
+                                            "key": "video"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
         }
     },
     "components": {
+        "schemas": {
+            "GetInterlocutor": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "interlocutorName": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "oneOf": [
+                            {
+                                "type": "null"
+                            },
+                            {
+                                "$ref": "#/components/schemas/GetUser"
+                            }
+                        ]
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "id": 1,
+                    "interlocutorName": "Test",
+                    "code": "23984y-uioe897-829347g-34879gb23",
+                    "user": "null",
+                    "created_at": "2023-11-06T15:34:03.000000Z",
+                    "updated_at": "2023-11-06T15:34:03.000000Z"
+                }
+            },
+            "Response_index_interlocutors": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "interlocutorName": {
+                                    "type": "string"
+                                },
+                                "code": {
+                                    "type": "string"
+                                },
+                                "user": {
+                                    "oneOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/GetUser"
+                                        }
+                                    ]
+                                },
+                                "created_at": {
+                                    "type": "string"
+                                },
+                                "updated_at": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "firstPageUrl": {
+                                        "type": "string"
+                                    },
+                                    "lastPageUrl": {
+                                        "type": "string"
+                                    },
+                                    "nextPageUrl": {
+                                        "type": "string"
+                                    },
+                                    "prevPageUrl": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    },
+                    "meta": {
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "currentPage": {
+                                        "type": "integer"
+                                    },
+                                    "from": {
+                                        "type": "integer"
+                                    },
+                                    "lastPage": {
+                                        "type": "integer"
+                                    },
+                                    "perPage": {
+                                        "type": "integer"
+                                    },
+                                    "to": {
+                                        "type": "integer"
+                                    },
+                                    "total": {
+                                        "type": "integer"
+                                    },
+                                    "count": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "data": [
+                        {
+                            "id": 1,
+                            "interlocutorName": "Test",
+                            "code": "23984y-uioe897-829347g-34879gb23",
+                            "user": "null",
+                            "created_at": "2023-11-06T15:34:03.000000Z",
+                            "updated_at": "2023-11-06T15:34:03.000000Z"
+                        },
+                        {
+                            "id": 2,
+                            "interlocutorName": "Test",
+                            "code": "23984y-uioe897-829347g-34879gb23",
+                            "user": "null",
+                            "created_at": "2023-11-06T15:34:03.000000Z",
+                            "updated_at": "2023-11-06T15:34:03.000000Z"
+                        }
+                    ],
+                    "links": {
+                        "path": "http://localhost:8000/api/interlocutor",
+                        "firstPageUrl": "http://localhost:8000/api/interlocutor?page=1",
+                        "lastPageUrl": "http://localhost:8000/api/interlocutor?page=2",
+                        "nextPageUrl": "http://localhost:8000/api/interlocutor?page=2",
+                        "prevPageUrl": null
+                    },
+                    "meta": {
+                        "currentPage": 1,
+                        "from": 1,
+                        "lastPage": 2,
+                        "perPage": 10,
+                        "to": 10,
+                        "total": 13,
+                        "count": 10
+                    }
+                }
+            },
+            "GetRoom": {
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "creator": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "id": 1,
+                    "name": "23984y-uioe897-829347g-34879gb23",
+                    "creator": 2,
+                    "created_at": "2023-11-06T15:34:03.000000Z",
+                    "updated_at": "2023-11-06T15:34:03.000000Z"
+                }
+            },
+            "Response_room_interlocutors": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/GetInterlocutor"
+                }
+            },
+            "GetMessage": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "interlocutor": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/GetInterlocutor"
+                            }
+                        ]
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "id": 1,
+                    "content": "Test text",
+                    "interlocutor": {
+                        "id": 1,
+                        "firstName": "Test",
+                        "lastName": "User",
+                        "gender": "Female",
+                        "phone": "+380501234567",
+                        "currentAddress": "Beech Creek, PA, Pennsylvania",
+                        "permanantAddress": "Arlington Heights, IL, Illinois",
+                        "email": "12345@gmail.com",
+                        "birthday": "1975-05-21",
+                        "email_verified_at": "2023-11-06T15:34:03.000000Z",
+                        "avatarPath": "avatar/127486g-2397y4-28397-2387h4.png",
+                        "email_verified": false,
+                        "created_at": "2023-11-06T15:34:03.000000Z",
+                        "updated_at": "2023-11-06T15:34:03.000000Z"
+                    },
+                    "created_at": "2023-11-06T15:34:03.000000Z",
+                    "updated_at": "2023-11-06T15:34:03.000000Z"
+                }
+            },
+            "Response_index_messages": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "content": {
+                                    "type": "string"
+                                },
+                                "interlocutor": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/GetInterlocutor"
+                                        }
+                                    ]
+                                },
+                                "created_at": {
+                                    "type": "string"
+                                },
+                                "updated_at": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "data": [
+                        {
+                            "id": 1,
+                            "content": "Test text",
+                            "interlocutor": {
+                                "id": 1,
+                                "firstName": "Test",
+                                "lastName": "User",
+                                "gender": "Female",
+                                "phone": "+380501234567",
+                                "currentAddress": "Beech Creek, PA, Pennsylvania",
+                                "permanantAddress": "Arlington Heights, IL, Illinois",
+                                "email": "12345@gmail.com",
+                                "birthday": "1975-05-21",
+                                "email_verified_at": "2023-11-06T15:34:03.000000Z",
+                                "avatarPath": "avatar/127486g-2397y4-28397-2387h4.png",
+                                "email_verified": false,
+                                "created_at": "2023-11-06T15:34:03.000000Z",
+                                "updated_at": "2023-11-06T15:34:03.000000Z"
+                            },
+                            "created_at": "2023-11-06T15:34:03.000000Z",
+                            "updated_at": "2023-11-06T15:34:03.000000Z"
+                        },
+                        {
+                            "id": 2,
+                            "content": "Test text",
+                            "interlocutor": {
+                                "id": 1,
+                                "firstName": "Test",
+                                "lastName": "User",
+                                "gender": "Female",
+                                "phone": "+380501234567",
+                                "currentAddress": "Beech Creek, PA, Pennsylvania",
+                                "permanantAddress": "Arlington Heights, IL, Illinois",
+                                "email": "12345@gmail.com",
+                                "birthday": "1975-05-21",
+                                "email_verified_at": "2023-11-06T15:34:03.000000Z",
+                                "avatarPath": "avatar/127486g-2397y4-28397-2387h4.png",
+                                "email_verified": false,
+                                "created_at": "2023-11-06T15:34:03.000000Z",
+                                "updated_at": "2023-11-06T15:34:03.000000Z"
+                            },
+                            "created_at": "2023-11-06T15:34:03.000000Z",
+                            "updated_at": "2023-11-06T15:34:03.000000Z"
+                        }
+                    ]
+                }
+            },
+            "Response_access_token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string"
+                    },
+                    "expires_in": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjk5NDM0NjI3LCJleHAiOjE2OTk0MzgyMjcsIm5iZiI6MTY5OTQzNDYyNywianRpIjoiaHNzeHVDZmJTUUd3QU85eCIsInN1YiI6IjExIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.V7B_I7bCT57x1kOV_1u9eQxscWAwAqW3Ae9oRvY62LM",
+                    "token_type": "bearer",
+                    "expires_in": 3600
+                }
+            },
+            "Response_index_users": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "firstName": {
+                                    "type": "string"
+                                },
+                                "lastName": {
+                                    "type": "string"
+                                },
+                                "gender": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "currentAddress": {
+                                    "type": "string"
+                                },
+                                "permanantAddress": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "birthdey": {
+                                    "type": "string"
+                                },
+                                "email_verified": {
+                                    "type": "string"
+                                },
+                                "avatarPath": {
+                                    "type": "string"
+                                },
+                                "created_at": {
+                                    "type": "string"
+                                },
+                                "updated_at": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "links": {
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "firstPageUrl": {
+                                        "type": "string"
+                                    },
+                                    "lastPageUrl": {
+                                        "type": "string"
+                                    },
+                                    "nextPageUrl": {
+                                        "type": "string"
+                                    },
+                                    "prevPageUrl": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    },
+                    "meta": {
+                        "type": "object",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "currentPage": {
+                                        "type": "integer"
+                                    },
+                                    "from": {
+                                        "type": "integer"
+                                    },
+                                    "lastPage": {
+                                        "type": "integer"
+                                    },
+                                    "perPage": {
+                                        "type": "integer"
+                                    },
+                                    "to": {
+                                        "type": "integer"
+                                    },
+                                    "total": {
+                                        "type": "integer"
+                                    },
+                                    "count": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "data": [
+                        {
+                            "id": 1,
+                            "firstName": "Test",
+                            "lastName": "User",
+                            "gender": "Female",
+                            "phone": "+380501234567",
+                            "currentAddress": "Beech Creek, PA, Pennsylvania",
+                            "permanantAddress": "Arlington Heights, IL, Illinois",
+                            "email": "12345@gmail.com",
+                            "birthday": "1975-05-21",
+                            "email_verified_at": "2023-11-06T15:34:03.000000Z",
+                            "avatarPath": "avatar/127486g-2397y4-28397-2387h4.png",
+                            "email_verified": false,
+                            "created_at": "2023-11-06T15:34:03.000000Z",
+                            "updated_at": "2023-11-06T15:34:03.000000Z"
+                        },
+                        {
+                            "id": 2,
+                            "firstName": "Test2",
+                            "lastName": "User2",
+                            "gender": "Female2",
+                            "phone": "+380501234567",
+                            "currentAddress": "Beech Creek, PA, Pennsylvania",
+                            "permanantAddress": "Arlington Heights, IL, Illinois",
+                            "email": "12345222@gmail.com",
+                            "birthday": "1975-05-21",
+                            "email_verified_at": "2023-11-06T15:34:03.000000Z",
+                            "avatarPath": "avatar/127486g-2397y4-28397-2387h4.png",
+                            "email_verified": false,
+                            "created_at": "2023-11-06T15:34:03.000000Z",
+                            "updated_at": "2023-11-06T15:34:03.000000Z"
+                        }
+                    ],
+                    "links": {
+                        "path": "http://localhost:8000/api/user",
+                        "firstPageUrl": "http://localhost:8000/api/user?page=1",
+                        "lastPageUrl": "http://localhost:8000/api/user?page=2",
+                        "nextPageUrl": "http://localhost:8000/api/user?page=2",
+                        "prevPageUrl": null
+                    },
+                    "meta": {
+                        "currentPage": 1,
+                        "from": 1,
+                        "lastPage": 2,
+                        "perPage": 10,
+                        "to": 10,
+                        "total": 13,
+                        "count": 10
+                    }
+                }
+            },
+            "Unauthenticated": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "message": "Unauthenticated."
+                }
+            },
+            "GetUser": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "currentAddress": {
+                        "type": "string"
+                    },
+                    "permanantAddress": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "birthdey": {
+                        "type": "string"
+                    },
+                    "email_verified": {
+                        "type": "string"
+                    },
+                    "avatarPath": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "id": 1,
+                    "firstName": "Test",
+                    "lastName": "User",
+                    "gender": "Female",
+                    "phone": "+380501234567",
+                    "currentAddress": "Beech Creek, PA, Pennsylvania",
+                    "permanantAddress": "Arlington Heights, IL, Illinois",
+                    "email": "12345@gmail.com",
+                    "birthday": "1975-05-21",
+                    "email_verified_at": "2023-11-06T15:34:03.000000Z",
+                    "avatarPath": "avatar/127486g-2397y4-28397-2387h4.png",
+                    "email_verified": false,
+                    "created_at": "2023-11-06T15:34:03.000000Z",
+                    "updated_at": "2023-11-06T15:34:03.000000Z"
+                }
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -911,6 +2163,22 @@
         {
             "name": "Users",
             "description": "Endpoints for users"
+        },
+        {
+            "name": "Interlocutors",
+            "description": "Endpoints for interlocutors"
+        },
+        {
+            "name": "Rooms",
+            "description": "Endpoints for interacting with rooms"
+        },
+        {
+            "name": "VideoChat",
+            "description": "Endpoints for video chat interaction"
+        },
+        {
+            "name": "TextChat",
+            "description": "Endpoints for text chat interaction"
         }
     ]
 }

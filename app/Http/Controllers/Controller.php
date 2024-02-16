@@ -25,15 +25,29 @@ use Illuminate\Routing\Controller as BaseController;
  *     name="Interlocutors",
  *     description="Endpoints for interlocutors"
  * ),
+ * @OA\Tag(
+ *     name="Rooms",
+ *     description="Endpoints for interacting with rooms"
+ * ),
+ * @OA\Tag(
+ *     name="VideoChat",
+ *     description="Endpoints for video chat interaction"
+ * ),
+ * @OA\Tag(
+ *     name="TextChat",
+ *     description="Endpoints for text chat interaction"
+ * ),
  * @OA\Components(
  *     @OA\SecurityScheme(
  *         type="http",
  *         scheme="bearer",
  *         securityScheme="bearerAuth"
  *     )
- * )
+ * ),
  */
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 }
