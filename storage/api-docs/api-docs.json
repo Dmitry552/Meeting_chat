@@ -331,6 +331,112 @@
                 }
             }
         },
+        "/room/roomsBetweenDates": {
+            "get": {
+                "tags": [
+                    "SystemRooms"
+                ],
+                "summary": "Get rooms by dates",
+                "description": "Get rooms between dates",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "properties": {
+                                            "startDate": {
+                                                "type": "string"
+                                            },
+                                            "endDate": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "startDate": "2023-04-02",
+                                            "endDate": "2023-05-02"
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "startDate": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "startDate": "2023-04-02"
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "endDate": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object",
+                                        "example": {
+                                            "endDate": "2023-05-02"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "allOf": [
+                                            {
+                                                "properties": {
+                                                    "date": {
+                                                        "type": "string"
+                                                    },
+                                                    "countRoom": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        ]
+                                    },
+                                    "example": [
+                                        {
+                                            "date": "2023-02-03",
+                                            "countRoom": 1
+                                        },
+                                        {
+                                            "date": "2023-02-04",
+                                            "countRoom": 4
+                                        },
+                                        {
+                                            "date": "2023-02-05",
+                                            "countRoom": 6
+                                        },
+                                        {
+                                            "date": "2023-02-06",
+                                            "countRoom": 2
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/textChat/{roomName}": {
             "get": {
                 "tags": [
@@ -2171,6 +2277,10 @@
         {
             "name": "Rooms",
             "description": "Endpoints for interacting with rooms"
+        },
+        {
+            "name": "SystemRooms",
+            "description": "Endpoints for admin interaction with rooms"
         },
         {
             "name": "VideoChat",

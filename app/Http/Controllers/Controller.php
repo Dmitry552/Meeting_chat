@@ -30,6 +30,10 @@ use Illuminate\Routing\Controller as BaseController;
  *     description="Endpoints for interacting with rooms"
  * ),
  * @OA\Tag(
+ *     name="SystemRooms",
+ *     description="Endpoints for admin interaction with rooms"
+ * ),
+ * @OA\Tag(
  *     name="VideoChat",
  *     description="Endpoints for video chat interaction"
  * ),
