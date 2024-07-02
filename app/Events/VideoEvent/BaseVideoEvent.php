@@ -62,4 +62,6 @@ abstract class BaseVideoEvent implements ShouldBroadcast
     {
         return new Channel('videoMeeting.' . $this->channelName);
     }
+
+    abstract public function action(): string;
 }

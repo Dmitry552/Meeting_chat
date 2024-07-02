@@ -15,7 +15,7 @@ class UserAvatarSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         if (!file_exists(public_path('images\__avatar__.png'))) {
             return;

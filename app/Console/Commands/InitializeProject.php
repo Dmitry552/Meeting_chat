@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 
 class InitializeProject extends Command
 {
@@ -16,17 +14,7 @@ class InitializeProject extends Command
     {
         $bar = $this->output->createProgressBar(5);
 
-        $bar->start();;
-
-        $this->newLine();
-        $this->line('Created database!');
-        $bar->advance();
-        try {
-            DB::unprepared(File::get('database/dumps/DatabaseCreation.sql'));
-        } catch (\Exception $exc) {
-            $this->error($exc->getMessage());
-            exit;
-        }
+        $bar->start();
 
         $this->newLine();
         $this->line('Key generate!');
@@ -45,12 +33,6 @@ class InitializeProject extends Command
         $bar->advance();
         $this->newLine();
         $this->call('jwt:secret');
-
-        $this->newLine();
-        $this->line('Telescope resource publishing!');
-        $bar->advance();
-        $this->newLine();
-        $this->call('telescope:install');
 
         $this->newLine();
         $this->line('Run all migrations!');

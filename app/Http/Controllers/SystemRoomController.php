@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 class SystemRoomController extends Controller
 {
     /**
-     * PERMISSION_YYYY_DDDD_AAAA = 'pesmision yyyy dddd aaaa'
+     * PERMISSION_YYYY_DDDD_AAAA = 'permission yyyy dddd aaaa'
      *
      * YYYY(yyyy) - who is doing
      * DDDD(dddd) - where does it do
